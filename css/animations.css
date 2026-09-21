@@ -1,0 +1,232 @@
+/**
+ * ==========================================================================
+ * ROYAL WEDDING INVITATION - ANIMATIONS & KEYFRAMES
+ * ==========================================================================
+ */
+
+/* Scroll Reveal Base Classes */
+.reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92) translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-scale.active {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* ==========================================================================
+   DOOR 3D OPENING KEYFRAMES
+   ========================================================================== */
+.door-scene {
+  perspective: 1500px;
+  perspective-origin: 50% 50%;
+}
+
+.door-panel-left {
+  transform-origin: left center;
+  transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease 1.6s;
+}
+
+.door-panel-right {
+  transform-origin: right center;
+  transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease 1.6s;
+}
+
+.doors-opening .door-panel-left {
+  transform: rotateY(-115deg);
+  opacity: 0;
+}
+
+.doors-opening .door-panel-right {
+  transform: rotateY(115deg);
+  opacity: 0;
+}
+
+.doors-opening .door-arch-frame {
+  opacity: 0;
+  transform: scale(1.15);
+  transition: opacity 1.5s ease 0.8s, transform 2s ease;
+}
+
+.doors-opening .door-glow-portal {
+  opacity: 1;
+  transform: scale(2.5);
+  transition: opacity 1.2s ease, transform 2s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+/* ==========================================================================
+   GOLDEN PULSE & GLOW
+   ========================================================================== */
+@keyframes pulse-gold {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(221, 174, 59, 0.4), 0 0 20px rgba(221, 174, 59, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(221, 174, 59, 0.8), 0 0 35px rgba(247, 229, 169, 0.6);
+    transform: scale(1.04);
+  }
+}
+
+@keyframes gold-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.text-gold-gradient {
+  background: linear-gradient(120deg, var(--color-gold-deep) 0%, var(--color-gold-light) 50%, var(--color-gold-deep) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shimmer 6s linear infinite;
+}
+
+.gold-glow-border {
+  animation: glow-pulse 3s infinite alternate ease-in-out;
+}
+
+@keyframes glow-pulse {
+  from {
+    box-shadow: 0 0 15px rgba(201, 154, 44, 0.2), inset 0 0 10px rgba(201, 154, 44, 0.1);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(221, 174, 59, 0.5), inset 0 0 20px rgba(247, 229, 169, 0.3);
+  }
+}
+
+/* ==========================================================================
+   HEARTBEAT & LOVE PULSE
+   ========================================================================== */
+@keyframes heart-beat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.2);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.2);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+.heart-beat-icon {
+  display: inline-block;
+  color: #D92534;
+  animation: heart-beat 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(217, 37, 52, 0.4));
+}
+
+/* ==========================================================================
+   ISLAMIC LANTERN (FANOUS) ANIMATION
+   ========================================================================== */
+@keyframes lantern-swing {
+  0% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes lantern-flame {
+  0%, 100% {
+    opacity: 0.75;
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 8px rgba(255, 200, 55, 0.7));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 16px rgba(255, 220, 80, 0.95));
+  }
+}
+
+.lantern-container {
+  transform-origin: top center;
+  animation: lantern-swing 6s ease-in-out infinite;
+}
+
+.lantern-flame-glow {
+  animation: lantern-flame 2.5s ease-in-out infinite alternate;
+}
+
+/* ==========================================================================
+   FLOATING & DRIFTING ACCENTS
+   ========================================================================== */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(2deg);
+  }
+}
+
+.animate-float {
+  animation: float-slow 4.5s ease-in-out infinite;
+}
+
+/* Shimmer Seal Button Ripple */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(221, 174, 59, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 20px rgba(221, 174, 59, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(221, 174, 59, 0);
+  }
+}
+
+.pulse-ring-btn {
+  animation: pulse-ring 2.4s infinite cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* Confetti Burst Keyframes */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
