@@ -1,8 +1,8 @@
 /**
  * ==========================================================================
- * ROYAL WEDDING INVITATION - HEART SCRATCH CARD
- * HTML5 Canvas interactive heart-shaped scratch foil with 50% threshold
- * The canvas itself is clipped to a heart shape so the entire card is a heart.
+ * ROYAL WEDDING INVITATION - SQUARE SCRATCH CARD
+ * HTML5 Canvas interactive golden metallic scratch foil with 45% threshold.
+ * Covers 100% of the revealed wedding details. Unlocks scroll upon completion.
  * ==========================================================================
  */
 
@@ -15,8 +15,8 @@ class WeddingScratchCard {
     this.ctx = null;
     this.lastPoint = null;
     this.scratchedPercentage = 0;
-    this.scratchThreshold = 50; // 50% threshold
-    this.heartPixelCount = 0;   // total pixels inside the heart mask
+    this.scratchThreshold = 45; // 45% threshold for complete reveal
+    this._calcTimer = null;
   }
 
   init() {
@@ -26,7 +26,7 @@ class WeddingScratchCard {
     this.setupCanvas();
     this.bindEvents();
 
-    // Rebuild on resize
+    // Rebuild on resize if not already revealed
     window.addEventListener('resize', () => {
       if (!this.isRevealed) {
         this.setupCanvas();
@@ -35,9 +35,7 @@ class WeddingScratchCard {
   }
 
   /* -----------------------------------------------------------
-     Canvas setup: size it, draw everything, then pre-compute
-     how many pixels are inside the heart so we can later
-     calculate a percentage against only those pixels.
+     Canvas setup: match exact container pixel size with DPR
      ----------------------------------------------------------- */
   setupCanvas() {
     const container = this.canvas.parentElement;
@@ -49,138 +47,115 @@ class WeddingScratchCard {
 
     this.canvas.width = this.width * dpr;
     this.canvas.height = this.height * dpr;
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transforms
     this.ctx.scale(dpr, dpr);
 
-    this.drawHeartFoil();
-    this.precomputeHeartMask(dpr);
+    this.drawSquareFoil();
   }
 
   /* -----------------------------------------------------------
-     Build a heart bezier path at the centre of the canvas.
-     Everything outside the heart is fully transparent so it
-     naturally looks heart-shaped.
+     Draw the royal square metallic golden foil covering 100%
      ----------------------------------------------------------- */
-  heartPath(ctx, cx, cy, size) {
-    const s = size;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy - s * 0.35);
-
-    // left hump
-    ctx.bezierCurveTo(
-      cx - s * 0.02, cy - s * 0.85,
-      cx - s * 0.65, cy - s * 0.85,
-      cx - s * 0.65, cy - s * 0.35
-    );
-    // left bottom
-    ctx.bezierCurveTo(
-      cx - s * 0.65, cy + s * 0.1,
-      cx - s * 0.2,  cy + s * 0.45,
-      cx,            cy + s * 0.7
-    );
-    // right bottom
-    ctx.bezierCurveTo(
-      cx + s * 0.2,  cy + s * 0.45,
-      cx + s * 0.65, cy + s * 0.1,
-      cx + s * 0.65, cy - s * 0.35
-    );
-    // right hump
-    ctx.bezierCurveTo(
-      cx + s * 0.65, cy - s * 0.85,
-      cx + s * 0.02, cy - s * 0.85,
-      cx,            cy - s * 0.35
-    );
-    ctx.closePath();
-  }
-
-  /* -----------------------------------------------------------
-     Draw the golden metallic foil ONLY inside the heart shape.
-     ----------------------------------------------------------- */
-  drawHeartFoil() {
+  drawSquareFoil() {
     const ctx = this.ctx;
     const w = this.width;
     const h = this.height;
     const cx = w / 2;
     const cy = h / 2;
-    const heartSize = Math.min(w, h) * 0.48;
 
-    // Clear everything (transparent)
+    // Clear everything
     ctx.clearRect(0, 0, w, h);
 
-    // Clip to heart
-    ctx.save();
-    this.heartPath(ctx, cx, cy, heartSize);
-    ctx.clip();
-
-    // Metallic gold gradient
+    // 1. Rich Metallic Gold Gradient
     const grad = ctx.createLinearGradient(0, 0, w, h);
-    grad.addColorStop(0, '#9A7410');
-    grad.addColorStop(0.2, '#F7E5A9');
-    grad.addColorStop(0.45, '#DDAE3B');
-    grad.addColorStop(0.6, '#FFF6D6');
-    grad.addColorStop(0.8, '#C99A2C');
-    grad.addColorStop(1, '#9A7410');
+    grad.addColorStop(0.0, '#7A5809');
+    grad.addColorStop(0.18, '#DDAE3B');
+    grad.addColorStop(0.35, '#FFF6D6');
+    grad.addColorStop(0.55, '#F7E5A9');
+    grad.addColorStop(0.75, '#C99A2C');
+    grad.addColorStop(0.92, '#DDAE3B');
+    grad.addColorStop(1.0, '#7A5809');
+
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Subtle maroon filigree swirl pattern lines inside the heart
-    ctx.strokeStyle = 'rgba(92, 16, 29, 0.2)';
+    // 2. Central Shimmer Radial Glow
+    const radGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, Math.max(w, h) * 0.6);
+    radGrad.addColorStop(0, 'rgba(255, 255, 240, 0.45)');
+    radGrad.addColorStop(0.5, 'rgba(255, 246, 214, 0.15)');
+    radGrad.addColorStop(1, 'rgba(0, 0, 0, 0.08)');
+    ctx.fillStyle = radGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // 3. Subtle Maroon Filigree & Diagonal Etch Pattern
+    ctx.strokeStyle = 'rgba(92, 16, 29, 0.15)';
     ctx.lineWidth = 1.5;
-    for (let i = -10; i < 20; i++) {
+    const lineSpacing = 22;
+    for (let x = -h; x < w + h; x += lineSpacing) {
       ctx.beginPath();
-      ctx.moveTo(w * (i / 10), 0);
-      ctx.lineTo(w * (i / 10) - h * 0.3, h);
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x + h * 0.6, h);
       ctx.stroke();
     }
 
-    // Decorative text in the centre
-    ctx.fillStyle = '#3A0A10';
+    // 4. Double Ornate Inner Gold Border Frame
+    const inset1 = 14;
+    ctx.strokeStyle = 'rgba(92, 16, 29, 0.45)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(inset1, inset1, w - inset1 * 2, h - inset1 * 2);
+
+    const inset2 = 20;
+    ctx.strokeStyle = '#FFF6D6';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(inset2, inset2, w - inset2 * 2, h - inset2 * 2);
+
+    // Ornate Corner Diamond Accents
+    ctx.fillStyle = '#5C101D';
+    const cornerSize = 6;
+    const drawDiamond = (dx, dy) => {
+      ctx.beginPath();
+      ctx.moveTo(dx, dy - cornerSize);
+      ctx.lineTo(dx + cornerSize, dy);
+      ctx.lineTo(dx, dy + cornerSize);
+      ctx.lineTo(dx - cornerSize, dy);
+      ctx.closePath();
+      ctx.fill();
+    };
+    drawDiamond(inset2, inset2);
+    drawDiamond(w - inset2, inset2);
+    drawDiamond(inset2, h - inset2);
+    drawDiamond(w - inset2, h - inset2);
+
+    // 5. Central Badge & Typography
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    ctx.font = `bold ${Math.max(14, heartSize * 0.13)}px "Playfair Display", Georgia, serif`;
-    ctx.fillText('✨ Scratch Here ✨', cx, cy - heartSize * 0.08);
+    // Top Sparkle Pill
+    ctx.fillStyle = 'rgba(92, 16, 29, 0.85)';
+    const pillW = Math.min(180, w * 0.55);
+    const pillH = 26;
+    const pillY = cy - 65;
+    ctx.beginPath();
+    ctx.roundRect(cx - pillW / 2, pillY - pillH / 2, pillW, pillH, 13);
+    ctx.fill();
 
-    ctx.font = `${Math.max(11, heartSize * 0.085)}px "Montserrat", sans-serif`;
-    ctx.fillText('Reveal the Wedding Date', cx, cy + heartSize * 0.12);
+    ctx.fillStyle = '#FFF6D6';
+    ctx.font = `600 ${Math.max(10, Math.round(w * 0.03))}px "Montserrat", sans-serif`;
+    ctx.fillText('✨ SCRATCH CARD ✨', cx, pillY);
 
-    // Small heart emoji
-    ctx.font = `${Math.max(18, heartSize * 0.18)}px serif`;
-    ctx.fillText('❤️', cx, cy + heartSize * 0.35);
+    // Large Scratch Title
+    ctx.fillStyle = '#3A0A10';
+    ctx.font = `bold ${Math.max(18, Math.round(w * 0.066))}px "Playfair Display", Georgia, serif`;
+    ctx.fillText('✨ Scratch Here ✨', cx, cy - 15);
 
-    // Thin gold border stroke around the heart
-    ctx.restore();
-    ctx.save();
-    this.heartPath(ctx, cx, cy, heartSize);
-    ctx.strokeStyle = '#C99A2C';
-    ctx.lineWidth = 3;
-    ctx.shadowColor = 'rgba(221, 174, 59, 0.6)';
-    ctx.shadowBlur = 10;
-    ctx.stroke();
-    ctx.restore();
-  }
+    // Subtitle instruction
+    ctx.fillStyle = '#4A121A';
+    ctx.font = `500 ${Math.max(11, Math.round(w * 0.034))}px "Montserrat", sans-serif`;
+    ctx.fillText('Unveil the Wedding Date & Schedule', cx, cy + 22);
 
-  /* -----------------------------------------------------------
-     Pre-scan the canvas once to count how many pixels are
-     opaque (inside the heart). We only measure scratch %
-     against those pixels, ignoring transparent background.
-     ----------------------------------------------------------- */
-  precomputeHeartMask(dpr) {
-    const canvasW = this.canvas.width;
-    const canvasH = this.canvas.height;
-    const step = 8; // sample grid
-    const imgData = this.ctx.getImageData(0, 0, canvasW, canvasH);
-    const px = imgData.data;
-    let count = 0;
-
-    for (let y = 0; y < canvasH; y += step) {
-      for (let x = 0; x < canvasW; x += step) {
-        const idx = (y * canvasW + x) * 4;
-        if (px[idx + 3] > 20) {  // non-transparent → inside heart
-          count++;
-        }
-      }
-    }
-    this.heartPixelCount = count;
+    // Love Icon / Emoji
+    ctx.font = `${Math.max(22, Math.round(w * 0.08))}px serif`;
+    ctx.fillText('💍', cx, cy + 62);
   }
 
   /* -----------------------------------------------------------
@@ -228,7 +203,7 @@ class WeddingScratchCard {
       this._calcTimer = setTimeout(() => {
         this.calculateScratchedPercent();
         this._calcTimer = null;
-      }, 60);
+      }, 50);
     }
   }
 
@@ -244,7 +219,7 @@ class WeddingScratchCard {
     ctx.save();
     ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
-    ctx.arc(x, y, 28, 0, Math.PI * 2);
+    ctx.arc(x, y, 32, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
@@ -253,7 +228,7 @@ class WeddingScratchCard {
     const ctx = this.ctx;
     ctx.save();
     ctx.globalCompositeOperation = 'destination-out';
-    ctx.lineWidth = 54;
+    ctx.lineWidth = 64;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.beginPath();
@@ -264,43 +239,33 @@ class WeddingScratchCard {
   }
 
   /* -----------------------------------------------------------
-     Measure how much of the HEART has been scratched (ignoring
-     the transparent area outside the heart shape).
+     Measure how much of the square card foil has been erased
      ----------------------------------------------------------- */
   calculateScratchedPercent() {
-    if (this.isRevealed || this.heartPixelCount === 0) return;
+    if (this.isRevealed) return;
 
-    const dpr = window.devicePixelRatio || 1;
     const canvasW = this.canvas.width;
     const canvasH = this.canvas.height;
     const step = 8;
     const imgData = this.ctx.getImageData(0, 0, canvasW, canvasH);
     const px = imgData.data;
 
-    let cleared = 0;
-    let totalInHeart = 0;
+    let total = 0;
+    let scratched = 0;
 
     for (let y = 0; y < canvasH; y += step) {
       for (let x = 0; x < canvasW; x += step) {
+        total++;
         const idx = (y * canvasW + x) * 4;
-        // A pixel that was originally opaque (inside heart) but is now
-        // transparent counts as "scratched". Pixels that were always
-        // transparent (outside heart) are ignored.
-        //
-        // We use the pre-computed heartPixelCount as the total.
-        // A scratched-inside-heart pixel has alpha < 20.
         if (px[idx + 3] < 20) {
-          // Could be outside heart (always transparent) or scratched
-          // We can't distinguish directly, so instead count remaining
-        } else {
-          totalInHeart++;
+          scratched++;
         }
       }
     }
 
-    // Remaining opaque pixels vs original heart pixel count
-    const scratchedCount = this.heartPixelCount - totalInHeart;
-    const percentage = Math.round((scratchedCount / this.heartPixelCount) * 100);
+    if (total === 0) return;
+
+    const percentage = Math.round((scratched / total) * 100);
     this.scratchedPercentage = percentage;
 
     // Update progress bar
@@ -309,38 +274,59 @@ class WeddingScratchCard {
       this.progressFill.style.width = `${displayPct}%`;
     }
 
-    // Check 50% reveal threshold
+    // Check threshold for full reveal
     if (percentage >= this.scratchThreshold) {
       this.triggerCompleteReveal();
     }
   }
 
   /* -----------------------------------------------------------
-     Trigger the celebration reveal sequence
+     Trigger complete reveal: unlock scrolling and celebrate!
      ----------------------------------------------------------- */
   triggerCompleteReveal() {
     if (this.isRevealed) return;
     this.isRevealed = true;
 
-    // Fade out the remaining canvas foil
+    // 1. Fade out the canvas foil
     this.canvas.classList.add('revealed');
     if (this.progressFill) {
       this.progressFill.style.width = '100%';
     }
 
-    // Launch fireworks & confetti
+    // 2. Unlock body scrolling & unlock sections downstream
+    document.body.classList.remove('scratch-locked');
+    const lockNotice = document.getElementById('scratchLockNotice');
+    if (lockNotice) {
+      lockNotice.style.opacity = '0';
+      lockNotice.style.transform = 'translateY(10px)';
+      lockNotice.style.transition = 'all 0.4s ease';
+      setTimeout(() => {
+        lockNotice.style.display = 'none';
+      }, 400);
+    }
+
+    // 3. Re-initialize scroll observer so unlocked sections reveal smoothly
+    setTimeout(() => {
+      if (window.weddingObserver) {
+        window.weddingObserver.init();
+      }
+    }, 150);
+
+    // 4. Launch fireworks & confetti
     if (window.weddingCelebration) {
       window.weddingCelebration.launch();
     }
 
-    // Play celebration sound
+    // 5. Play celebration sound
     if (window.weddingAudio) {
       window.weddingAudio.playCelebrationFanfare();
     }
 
-    // Toast notification
+    // 6. Toast notification
     if (window.showToast) {
-      window.showToast("🎉 Date Revealed! Save the Date for Mohamed & Fathima!");
+      const g = window.WEDDING_CONFIG?.groom?.name || 'Rahamathullah';
+      const b = window.WEDDING_CONFIG?.bride?.name || 'Maseera';
+      window.showToast(`🎉 Date Revealed! Save the Date for ${g} & ${b}!`);
     }
   }
 }

@@ -15,6 +15,12 @@ class WeddingDoorController {
   init() {
     if (!this.heroSection || !this.openDoorBtn) return;
 
+    // Reset scroll and disable automatic scroll restoration so doors are always shown first
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
     // Ensure body starts locked
     document.body.classList.add('door-locked');
 
@@ -47,6 +53,11 @@ class WeddingDoorController {
       this.doorScene.classList.add('doors-opening');
     }
 
+    // Start falling petals & gold particles animation for opening & intro section
+    if (window.weddingPetals) {
+      window.weddingPetals.start(7500);
+    }
+
     // Smooth transition & scroll to main content
     setTimeout(() => {
       document.body.classList.remove('door-locked');
@@ -64,6 +75,11 @@ class WeddingDoorController {
         }
         // Reset scroll to the very top so couple section is at top
         window.scrollTo(0, 0);
+
+        // Refresh scratch canvas dimensions once hero is cleared
+        if (window.weddingScratchCard && !window.weddingScratchCard.isRevealed) {
+          window.weddingScratchCard.setupCanvas();
+        }
       }, 1300);
     }, 1400);
   }

@@ -62,8 +62,8 @@ class WeddingRSVP {
 
     // Prepare WhatsApp RSVP message
     const targetPhone = window.WEDDING_CONFIG?.share?.whatsappNumber || '919876543210';
-    const groomName = window.WEDDING_CONFIG?.groom?.name || 'Mohamed';
-    const brideName = window.WEDDING_CONFIG?.bride?.name || 'Fathima';
+    const groomName = window.WEDDING_CONFIG?.groom?.name || 'Rahamathullah';
+    const brideName = window.WEDDING_CONFIG?.bride?.name || 'Maseera';
 
     const waText = encodeURIComponent(
       `*Wedding RSVP for ${groomName} & ${brideName}*\n\n` +

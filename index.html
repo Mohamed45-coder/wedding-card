@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>Wedding Invitation | Mohamed & Fathima</title>
+  <title>Wedding Invitation | Rahamathullah & Maseera</title>
   
   <!-- Open Graph / WhatsApp Preview Meta -->
-  <meta property="og:title" content="Royal Wedding Invitation: Mohamed ❤️ Fathima">
-  <meta property="og:description" content="Together with our families, we invite you to celebrate the beginning of our forever on Sunday, 22nd November 2026.">
+  <meta property="og:title" content="Royal Wedding Invitation: Rahamathullah ❤️ Maseera">
+  <meta property="og:description" content="Together with our families, we invite you to celebrate the beginning of our forever on Saturday, 2nd January 2027.">
   <meta property="og:type" content="website">
   <meta name="theme-color" content="#5C101D">
 
@@ -20,8 +20,16 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/components.css">
+
+  <!-- Immediate Scroll Reset on Page Load / Refresh -->
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  </script>
 </head>
-<body class="door-locked">
+<body class="door-locked scratch-locked">
 
   <!-- Canvas Particle Layers -->
   <canvas id="petalsCanvas" aria-hidden="true"></canvas>
@@ -90,7 +98,7 @@
       <!-- Royal Seal & "Open Invitation" Button -->
       <div class="door-seal-overlay">
         <button id="openDoorBtn" class="door-seal-btn pulse-ring-btn" aria-label="Open Wedding Invitation">
-          <span class="seal-monogram">M & F</span>
+          <span class="seal-monogram">R & M</span>
           <span class="seal-tap-text">OPEN</span>
         </button>
         <div class="door-invitation-prompt">Royal Wedding Invitation</div>
@@ -123,9 +131,9 @@
           
           <!-- Couple Names -->
           <div class="couple-names-wrapper">
-            <h1 id="coupleIntroHeading" class="groom-name cfg-groom-name">Mohamed</h1>
+            <h1 id="coupleIntroHeading" class="groom-name cfg-groom-name">Mohamed Rahamathullah</h1>
             <span class="heart-connector"><span class="heart-beat-icon">❤️</span></span>
-            <span class="bride-name cfg-bride-name">Fathima</span>
+            <span class="bride-name cfg-bride-name">Maseera Kowsar</span>
           </div>
 
           <div class="section-title-divider">
@@ -143,9 +151,57 @@
     </section>
 
     <!-- =======================================================================
-         3. COUNTDOWN SECTION (GLASSMORPHISM)
+         3. SCRATCH CARD SECTION (Square Foil Card)
          ======================================================================= -->
-    <section id="countdownSection" class="section" aria-labelledby="countdownHeading">
+    <section id="scratchSection" class="section" aria-labelledby="scratchHeading">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-subtitle">Interactive Surprise</span>
+          <h2 id="scratchHeading" class="section-title">Scratch To Reveal Date</h2>
+          <div class="section-title-divider">
+            <span class="line"></span>
+            <span class="ornament">❖</span>
+            <span class="line"></span>
+          </div>
+          <p class="section-description">Scratch the golden card below to reveal the auspicious wedding date & timings!</p>
+        </div>
+
+        <div class="scratch-card-wrapper reveal reveal-scale">
+          <div class="scratch-canvas-container">
+            <!-- Underneath Revealed Content -->
+            <div class="scratch-revealed-content" id="scratchRevealedContent">
+              <div class="ornate-corner-tl"></div>
+              <div class="ornate-corner-tr"></div>
+              <div class="ornate-corner-bl"></div>
+              <div class="ornate-corner-br"></div>
+              <span class="revealed-badge">✨ Auspicious Occasion ✨</span>
+              <h3 class="revealed-date" id="revealedWeddingDate">Saturday, 2nd January 2027</h3>
+              <p class="revealed-time" id="revealedWeddingTime">Mehfil-E-Nikkah: 5:00 PM</p>
+              <p class="revealed-muhurtham" id="revealedMuhurtham">Dinner: 7:00 PM Onwards</p>
+            </div>
+
+            <!-- Scratchable HTML5 Canvas Overlay -->
+            <canvas id="scratchCanvas" width="360" height="360" aria-label="Interactive scratch card"></canvas>
+          </div>
+
+          <!-- Scratch Progress Bar -->
+          <div class="scratch-progress-bar" title="Scratch percentage">
+            <div id="scratchProgressFill" class="scratch-progress-fill"></div>
+          </div>
+
+          <!-- Lock Notice shown until card is scratched -->
+          <div id="scratchLockNotice" class="scratch-lock-notice">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Scratch the card to unlock full invitation details</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         4. COUNTDOWN SECTION (Save The Date + Add to Calendar)
+         ======================================================================= -->
+    <section id="countdownSection" class="section locked-until-scratch" aria-labelledby="countdownHeading">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-subtitle">Save The Date</span>
@@ -176,43 +232,13 @@
             <span class="countdown-label">Seconds</span>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- =======================================================================
-         4. HEART SCRATCH CARD SECTION
-         ======================================================================= -->
-    <section id="scratchSection" class="section" aria-labelledby="scratchHeading">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="section-subtitle">Interactive Surprise</span>
-          <h2 id="scratchHeading" class="section-title">Scratch With Love</h2>
-          <div class="section-title-divider">
-            <span class="line"></span>
-            <span class="ornament">❖</span>
-            <span class="line"></span>
-          </div>
-          <p class="section-description">Scratch the royal golden heart card below to unveil the wedding schedule & auspicious timings!</p>
-        </div>
-
-        <div class="scratch-card-wrapper reveal reveal-scale">
-          <div class="scratch-canvas-container">
-            <!-- Underneath Revealed Content -->
-            <div class="scratch-revealed-content" id="scratchRevealedContent">
-              <span class="revealed-badge">✨ Auspicious Occasion ✨</span>
-              <h3 class="revealed-date" id="revealedWeddingDate">Sunday, 22nd November 2026</h3>
-              <p class="revealed-time" id="revealedWeddingTime">10:30 AM onwards</p>
-              <p class="revealed-muhurtham" id="revealedMuhurtham">Nikah Ceremony: 11:00 AM</p>
-            </div>
-
-            <!-- Scratchable HTML5 Canvas Overlay -->
-            <canvas id="scratchCanvas" width="360" height="360" aria-label="Interactive scratch card"></canvas>
-          </div>
-
-          <!-- Scratch Progress Bar -->
-          <div class="scratch-progress-bar" title="Scratch percentage">
-            <div id="scratchProgressFill" class="scratch-progress-fill"></div>
-          </div>
+        <!-- Add To Calendar Action Button -->
+        <div class="countdown-actions reveal reveal-delay-2">
+          <button id="addToCalendarBtn" class="btn-royal" aria-label="Add Wedding to Calendar">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Add To Calendar
+          </button>
         </div>
       </div>
     </section>
@@ -220,7 +246,7 @@
     <!-- =======================================================================
          5. EVENT TIMELINE SECTION
          ======================================================================= -->
-    <section id="timelineSection" class="section" aria-labelledby="timelineHeading">
+    <section id="timelineSection" class="section locked-until-scratch" aria-labelledby="timelineHeading">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-subtitle">Celebration Program</span>
@@ -241,7 +267,7 @@
     <!-- =======================================================================
          6. VENUE & LOCATION SECTION
          ======================================================================= -->
-    <section id="venueSection" class="section" aria-labelledby="venueHeading">
+    <section id="venueSection" class="section locked-until-scratch" aria-labelledby="venueHeading">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-subtitle">Destination</span>
@@ -251,7 +277,7 @@
             <span class="ornament">❖</span>
             <span class="line"></span>
           </div>
-          <p class="section-description">We look forward to welcoming you at our grand celebration hall.</p>
+          <p class="section-description">We look forward to welcoming you at our celebration hall.</p>
         </div>
 
         <div class="venue-grid">
@@ -263,13 +289,12 @@
             <div class="ornate-corner-br"></div>
 
             <div>
-              <h3 id="venueName" class="venue-name">The Royal Palace Banquet & Convention Center</h3>
-              <p id="venueHall" class="section-subtitle" style="font-size:1.3rem; margin-bottom:1rem;">Grand Crystal & Majestic Halls</p>
+              <h3 id="venueHall" class="section-subtitle" style="font-size:1.3rem; margin-bottom:1rem;">Perunthalaivar Kamarajar Community Hall</h3>
               <p id="venueAddress" class="venue-address">
-                No. 77, Grand Palace Boulevard, Near Royal Lake, Chennai - 600028, Tamil Nadu, India
+                225, SRP Koil street (North), Peravallur, Tiru.Vi.Ka Nagar, Perambur, Chennai-600082
               </p>
               <p id="venueLandmark" style="font-size:0.95rem; color:var(--color-gold-deep); font-weight:600;">
-                Landmark: Opposite to Heritage Garden, 10 Mins from Central Metro
+                Landmark: SRP Koil Street (North), Peravallur, Perambur
               </p>
             </div>
 
@@ -278,22 +303,22 @@
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
                 Get Directions
               </a>
-              <button id="addToCalendarBtn" class="btn-royal btn-royal-outline">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                Add To Calendar
-              </button>
             </div>
           </div>
 
-          <!-- Embedded Google Map -->
-          <div class="map-card reveal reveal-delay-1">
-            <iframe 
-              id="venueMapIframe"
-              title="Venue Location Map"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.586111003445!2d80.2450!3d13.0600!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDAzJzM2LjAiTiA4MMKwMTQnNDIuMCJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
-              loading="lazy"
-              allowfullscreen>
-            </iframe>
+          <!-- Interactive Flower Bouquet QR Code -->
+          <div class="bloom-qr-wrapper reveal reveal-delay-1">
+            <div class="bloom-crop-container" id="bloomCropContainer">
+              <iframe 
+                id="bloomIframe"
+                class="bloom-iframe"
+                title="Tap the bouquet to bloom a QR code"
+                src="https://www.bubbbly.com/bloom?u=https%3A%2F%2Fmaps.app.goo.gl%2FWrunQKfkcurjyNUC9"
+                loading="lazy"
+                scrolling="no"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+              </iframe>
+            </div>
           </div>
         </div>
       </div>
@@ -302,7 +327,7 @@
     <!-- =======================================================================
          7. FAMILY BLESSINGS SECTION
          ======================================================================= -->
-    <section id="familySection" class="section" aria-labelledby="familyHeading">
+    <section id="familySection" class="section locked-until-scratch" aria-labelledby="familyHeading">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-subtitle">With Heartfelt Blessings</span>
@@ -324,10 +349,10 @@
             <div class="ornate-corner-br"></div>
 
             <span id="groomFamilyTitle" class="family-badge">Groom's Family</span>
-            <div id="groomParents" class="family-parents">Janab K. S. Ibrahim & Smt. Noorjahan Ibrahim</div>
-            <div id="groomGrandparents" class="family-grandparents">Late Janab K. Sultan & Late Smt. Ameena Bi</div>
+            <div id="groomParents" class="family-parents">Paternal Grand S/O. Late Jamaludeen & Late Khasim Bee</div>
+            <div id="groomGrandparents" class="family-grandparents">Maternal Grand S/O. Late Ummar Basha & Choti Bee</div>
             <p id="groomBlessing" class="family-blessing-quote">
-              “With the grace of Almighty Allah, we cordially invite you and your family to bless our son Mohamed on this sacred milestone.”
+              “With the grace of Almighty Allah, we cordially invite you and your family to bless Rahamathullah on this sacred milestone.”
             </p>
             <div id="groomCompliments" class="family-compliments">With Best Compliments: Relatives & Friends</div>
           </div>
@@ -340,10 +365,10 @@
             <div class="ornate-corner-br"></div>
 
             <span id="brideFamilyTitle" class="family-badge">Bride's Family</span>
-            <div id="brideParents" class="family-parents">Janab A. M. Hameed & Smt. Raziya Begum</div>
-            <div id="brideGrandparents" class="family-grandparents">Late Janab A. Mohammed & Late Smt. Mariam Beevi</div>
+            <div id="brideParents" class="family-parents">Beloved Daughter of Ansar Khan & Mubashira Rizwana</div>
+            <div id="brideGrandparents" class="family-grandparents">Paternal Grand D/O. Late Majeed Khan & Late Safiya Bee | Maternal Grand D/O. Shaik Mahamood & Late Shamsunissa</div>
             <p id="brideBlessing" class="family-blessing-quote">
-              “Seeking the blessings of Allah (SWT) and your heartfelt presence as our beloved daughter Fathima embarks on this blessed union.”
+              “Seeking the blessings of Allah (SWT) and your heartfelt presence as our beloved daughter Maseera embarks on this blessed union.”
             </p>
             <div id="brideCompliments" class="family-compliments">With Best Compliments: Relatives & Friends</div>
           </div>
@@ -354,7 +379,7 @@
     <!-- =======================================================================
          8. WISHES / GUESTBOOK SECTION
          ======================================================================= -->
-    <section id="wishesSection" class="section" aria-labelledby="wishesHeading">
+    <section id="wishesSection" class="section locked-until-scratch" aria-labelledby="wishesHeading">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-subtitle">Warm Words</span>
@@ -364,7 +389,7 @@
             <span class="ornament">❖</span>
             <span class="line"></span>
           </div>
-          <p class="section-description">Send your warm congratulations and heartfelt blessings to Mohamed & Fathima.</p>
+          <p class="section-description">Send your warm congratulations and heartfelt blessings to Rahamathullah & Maseera.</p>
         </div>
 
         <div class="wishes-layout">
@@ -398,82 +423,9 @@
     </section>
 
     <!-- =======================================================================
-         9. RSVP SECTION
+         9. SHARE SECTION
          ======================================================================= -->
-    <section id="rsvpSection" class="section" aria-labelledby="rsvpHeading">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="section-subtitle">Will You Join Us?</span>
-          <h2 id="rsvpHeading" class="section-title">RSVP</h2>
-          <div class="section-title-divider">
-            <span class="line"></span>
-            <span class="ornament">❖</span>
-            <span class="line"></span>
-          </div>
-          <p class="section-description">Kindly confirm your presence to help us prepare a wonderful experience for you.</p>
-        </div>
-
-        <div class="rsvp-wrapper">
-          <div class="royal-card reveal">
-            <div class="ornate-corner-tl"></div>
-            <div class="ornate-corner-tr"></div>
-            <div class="ornate-corner-bl"></div>
-            <div class="ornate-corner-br"></div>
-
-            <form id="rsvpForm">
-              <div class="form-group">
-                <label for="rsvpName" class="form-label">Full Name</label>
-                <input type="text" id="rsvpName" class="form-input" placeholder="Your full name" required>
-              </div>
-
-              <div class="form-group">
-                <label for="rsvpPhone" class="form-label">Phone / WhatsApp Number</label>
-                <input type="tel" id="rsvpPhone" class="form-input" placeholder="+91 98765 43210" required>
-              </div>
-
-              <div class="form-group">
-                <label for="rsvpGuestCount" class="form-label">Number of Guests</label>
-                <select id="rsvpGuestCount" class="form-select">
-                  <option value="1">1 Person</option>
-                  <option value="2" selected>2 Persons</option>
-                  <option value="3">3 Persons</option>
-                  <option value="4">4 Persons</option>
-                  <option value="5+">5+ (Family)</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Will You Attend?</label>
-                <div class="rsvp-status-options">
-                  <label class="rsvp-radio-label">
-                    <input type="radio" name="rsvpStatus" value="attending" checked>
-                    <span>Joyfully Attend ✨</span>
-                  </label>
-                  <label class="rsvp-radio-label">
-                    <input type="radio" name="rsvpStatus" value="declined">
-                    <span>Regretfully Unable</span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="rsvpNotes" class="form-label">Notes or Special Food Preferences (Optional)</label>
-                <input type="text" id="rsvpNotes" class="form-input" placeholder="e.g. Vegetarian preference">
-              </div>
-
-              <button type="submit" class="btn-royal" style="width:100%;">
-                Submit RSVP & Confirm
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- =======================================================================
-         10. SHARE SECTION
-         ======================================================================= -->
-    <section id="shareSection" class="section" aria-labelledby="shareHeading">
+    <section id="shareSection" class="section locked-until-scratch" aria-labelledby="shareHeading">
       <div class="container">
         <div class="section-header reveal">
           <span class="section-subtitle">Spread The Joy</span>
@@ -503,9 +455,9 @@
   </main>
 
   <!-- =========================================================================
-       11. FOOTER SECTION & QURANIC BLESSING
+       10. FOOTER SECTION & QURANIC BLESSING
        ========================================================================= -->
-  <footer class="wedding-footer" role="contentinfo">
+  <footer class="wedding-footer locked-until-scratch" role="contentinfo">
     <div class="container">
       <!-- Animated Fanous Islamic Lanterns -->
       <div class="footer-lantern-row">
@@ -560,10 +512,6 @@
       <p style="font-size:1.15rem; color:#FDFCF8; max-width:540px; margin:0 auto 1.5rem auto;">
         For being part of our cherished journey. We eagerly look forward to celebrating with you!
       </p>
-
-      <div class="footer-credit">
-        Designed with Love for Mohamed ❤️ Fathima
-      </div>
     </div>
   </footer>
 
@@ -571,13 +519,12 @@
   <script src="js/config.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/door.js"></script>
-  <script src="js/countdown.js"></script>
   <script src="js/scratch-card.js"></script>
+  <script src="js/countdown.js"></script>
   <script src="js/celebration.js"></script>
   <script src="js/petals.js"></script>
   <script src="js/timeline.js"></script>
   <script src="js/guestbook.js"></script>
-  <script src="js/rsvp.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/app.js"></script>
 </body>

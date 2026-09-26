@@ -1,7 +1,7 @@
 /**
  * ==========================================================================
  * ROYAL WEDDING INVITATION - FLOATING ROSE PETALS & GOLD DUST
- * Ambient romantic particles drifting across the screen
+ * Ambient romantic particles drifting across the screen during intro
  * ==========================================================================
  */
 
@@ -15,6 +15,7 @@ class WeddingPetals {
     this.dustCount = 28;
     this.animationFrame = null;
     this.isRunning = false;
+    this.hasStopped = false;
   }
 
   init() {
@@ -28,6 +29,19 @@ class WeddingPetals {
     this.ctx = this.canvas.getContext('2d');
     this.resize();
     window.addEventListener('resize', () => this.resize());
+  }
+
+  start(duration = 7500) {
+    if (!this.canvas || this.isRunning || this.hasStopped) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    if (!this.ctx) {
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+    }
+
+    this.canvas.style.opacity = '1';
+    this.canvas.style.display = 'block';
 
     // Initialize petals
     this.petals = [];
@@ -44,15 +58,30 @@ class WeddingPetals {
     this.isRunning = true;
     this.loop();
 
-    // Pause when tab is invisible to save battery
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        this.isRunning = false;
-      } else {
-        this.isRunning = true;
-        this.loop();
+    // Auto-stop completely after intro period
+    setTimeout(() => {
+      if (this.canvas) {
+        this.canvas.style.opacity = '0';
       }
-    });
+      setTimeout(() => {
+        this.stop();
+      }, 1500);
+    }, duration);
+  }
+
+  stop() {
+    this.isRunning = false;
+    this.hasStopped = true;
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+      this.animationFrame = null;
+    }
+    if (this.ctx && this.canvas) {
+      this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+    if (this.canvas) {
+      this.canvas.style.display = 'none';
+    }
   }
 
   resize() {
@@ -174,4 +203,3 @@ class GoldDustParticle {
 }
 
 window.weddingPetals = new WeddingPetals();
-

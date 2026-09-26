@@ -14,7 +14,7 @@ class WeddingCountdown {
   }
 
   init() {
-    this.targetDate = new Date(window.WEDDING_CONFIG ? window.WEDDING_CONFIG.weddingDate : "2026-11-22T10:30:00").getTime();
+    this.targetDate = new Date(window.WEDDING_CONFIG ? window.WEDDING_CONFIG.weddingDate : "2027-01-02T17:00:00").getTime();
     this.update();
     this.timerInterval = setInterval(() => this.update(), 1000);
   }

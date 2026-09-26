@@ -115,9 +115,9 @@ class WeddingShareManager {
     const waBtn = document.getElementById('shareWhatsAppBtn');
     const copyBtn = document.getElementById('copyLinkBtn');
 
-    const groomName = window.WEDDING_CONFIG?.groom?.name || 'Mohamed';
-    const brideName = window.WEDDING_CONFIG?.bride?.name || 'Fathima';
-    const dateText = window.WEDDING_CONFIG?.weddingDateDisplay || '22nd November 2026';
+    const groomName = window.WEDDING_CONFIG?.groom?.name || 'Rahamathullah';
+    const brideName = window.WEDDING_CONFIG?.bride?.name || 'Maseera';
+    const dateText = window.WEDDING_CONFIG?.weddingDateDisplay || 'Saturday, 2nd January 2027';
     const currentUrl = window.location.href;
 
     if (waBtn) {
@@ -166,18 +166,19 @@ class WeddingShareManager {
 
   downloadIcsFile() {
     const config = window.WEDDING_CONFIG;
-    const groom = config?.groom?.name || 'Mohamed';
-    const bride = config?.bride?.name || 'Fathima';
-    const venueName = config?.venue?.name || 'The Royal Palace';
-    const venueAddress = config?.venue?.address || 'Chennai';
+    const groom = config?.groom?.name || 'Rahamathullah';
+    const bride = config?.bride?.name || 'Maseera';
+    const venueName = config?.venue?.name || 'Perunthalaivar Kamarajar Community Hall';
+    const venueAddress = config?.venue?.address || 'Perambur, Chennai';
 
-    const startDate = "20261122T103000";
-    const endDate = "20261122T160000";
+    const startDate = "20270102T170000";
+    const endDate = "20270102T230000";
 
     const icsContent = 
 `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Royal Wedding//Mohamed and Fathima//EN
+PRODID:-//Royal Wedding//Rahamathullah and Maseera//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
@@ -211,22 +212,30 @@ END:VCALENDAR`;
 
 // Scroll-Triggered Reveal Animations
 class WeddingScrollObserver {
+  constructor() {
+    this.observer = null;
+  }
+
   init() {
     const reveals = document.querySelectorAll('.reveal, .reveal-scale');
     if (!reveals.length) return;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
+    if (!this.observer) {
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -20px 0px'
       });
-    }, {
-      threshold: 0.12,
-      rootMargin: '0px 0px -40px 0px'
-    });
+    }
 
-    reveals.forEach((el) => observer.observe(el));
+    reveals.forEach((el) => {
+      this.observer.observe(el);
+    });
   }
 }
 

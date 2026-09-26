@@ -123,6 +123,7 @@ class WeddingAudioController {
   // Start background ambient music
   startAmbientMusic() {
     if (this.isPlaying) return;
+    if (this.isPlaying && this.customAudio && !this.customAudio.paused) return;
     this.ensureAudioContext();
 
     // Check if custom audio URL is set in config
@@ -130,9 +131,25 @@ class WeddingAudioController {
       if (!this.customAudio) {
         this.customAudio = new Audio(window.WEDDING_CONFIG.music.customAudioUrl);
         this.customAudio.loop = true;
+        this.customAudio.volume = 0.6;
+        this.customAudio.preload = 'auto';
+
+        // Continuous loop fallback to guarantee seamless replay across all browsers
+        this.customAudio.addEventListener('ended', () => {
+          this.customAudio.currentTime = 0;
+          this.customAudio.play().catch(() => {});
+        });
       }
       this.customAudio.play().catch(() => {});
+      this.customAudio.play().then(() => {
+        this.isPlaying = true;
+        this.isMuted = false;
+        this.updateUIState();
+      }).catch((e) => {
+        console.warn("Background audio play pending interaction:", e);
+      });
       this.isPlaying = true;
+      this.isMuted = false;
       this.updateUIState();
       return;
     }
@@ -191,6 +208,28 @@ class WeddingAudioController {
 
   togglePlayPause() {
     this.ensureAudioContext();
+
+    // If custom audio track configured
+    if (window.WEDDING_CONFIG && window.WEDDING_CONFIG.music && window.WEDDING_CONFIG.music.customAudioUrl) {
+      if (!this.customAudio) {
+        this.startAmbientMusic();
+        return;
+      }
+      if (this.customAudio.paused || this.isMuted || !this.isPlaying) {
+        this.customAudio.play().then(() => {
+          this.isPlaying = true;
+          this.isMuted = false;
+          this.updateUIState();
+        }).catch(() => {});
+      } else {
+        this.customAudio.pause();
+        this.isPlaying = false;
+        this.isMuted = true;
+        this.updateUIState();
+      }
+      return;
+    }
+
     if (this.isMuted || !this.isPlaying) {
       this.isMuted = false;
       this.isPlaying = true;

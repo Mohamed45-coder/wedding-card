@@ -14,14 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. Initialize Interactive Components
   if (window.weddingDoor) window.weddingDoor.init();
-  if (window.weddingCountdown) window.weddingCountdown.init();
   if (window.weddingScratchCard) window.weddingScratchCard.init();
+  if (window.weddingCountdown) window.weddingCountdown.init();
   if (window.weddingPetals) window.weddingPetals.init();
   if (window.weddingTimeline) window.weddingTimeline.init();
   if (window.weddingGuestbook) window.weddingGuestbook.init();
-  if (window.weddingRSVP) window.weddingRSVP.init();
   if (window.weddingShare) window.weddingShare.init();
   if (window.weddingScroll) window.weddingScroll.init();
+  initBloomResponsive();
 
   // 4. Initialize Scroll Animations
   setTimeout(() => {
@@ -51,6 +51,11 @@ function populateConfigData() {
   setElText('#venueAddress', cfg.venue.address);
   setElText('#venueLandmark', `Landmark: ${cfg.venue.landmark}`);
   
+  const bloomIframe = document.getElementById('bloomIframe');
+  if (bloomIframe && cfg.venue.bloomQrUrl) {
+    bloomIframe.src = cfg.venue.bloomQrUrl;
+  }
+
   const mapIframe = document.getElementById('venueMapIframe');
   if (mapIframe && cfg.venue.googleMapsEmbedUrl) {
     mapIframe.src = cfg.venue.googleMapsEmbedUrl;
@@ -90,5 +95,28 @@ function setElText(selector, text) {
   elements.forEach((el) => {
     el.textContent = text;
   });
+}
+
+function initBloomResponsive() {
+  const container = document.getElementById('bloomCropContainer');
+  if (!container) return;
+
+  function updateBloomScale() {
+    const width = container.clientWidth;
+    if (width <= 0) return;
+    const baseWidth = 440;
+    const ratio = Math.min(1, width / baseWidth);
+    const scale = Number((0.85 * ratio).toFixed(4));
+    container.style.setProperty('--bloom-scale', scale);
+    container.style.height = `${Math.round(480 * ratio)}px`;
+  }
+
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(updateBloomScale);
+    ro.observe(container.parentElement || container);
+  }
+  window.addEventListener('resize', updateBloomScale);
+  window.addEventListener('orientationchange', updateBloomScale);
+  updateBloomScale();
 }
 
