@@ -34,43 +34,29 @@
 }
 
 /* ==========================================================================
-   DOOR 3D OPENING KEYFRAMES
+   VIDEO HERO & SCROLL PROMPT ANIMATIONS
    ========================================================================== */
-.door-scene {
-  perspective: 1500px;
-  perspective-origin: 50% 50%;
+@keyframes bounce-down {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(9px);
+  }
+  60% {
+    transform: translateY(4px);
+  }
 }
 
-.door-panel-left {
-  transform-origin: left center;
-  transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease 1.6s;
-}
-
-.door-panel-right {
-  transform-origin: right center;
-  transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease 1.6s;
-}
-
-.doors-opening .door-panel-left {
-  transform: rotateY(-115deg);
-  opacity: 0;
-}
-
-.doors-opening .door-panel-right {
-  transform: rotateY(115deg);
-  opacity: 0;
-}
-
-.doors-opening .door-arch-frame {
-  opacity: 0;
-  transform: scale(1.15);
-  transition: opacity 1.5s ease 0.8s, transform 2s ease;
-}
-
-.doors-opening .door-glow-portal {
-  opacity: 1;
-  transform: scale(2.5);
-  transition: opacity 1.2s ease, transform 2s cubic-bezier(0.1, 0.9, 0.2, 1);
+@keyframes pulse-gold-subtle {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 12px rgba(221, 174, 59, 0.3);
+    border-color: rgba(221, 174, 59, 0.5);
+  }
+  50% {
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.7), 0 0 24px rgba(221, 174, 59, 0.7);
+    border-color: rgba(247, 229, 169, 0.85);
+  }
 }
 
 /* ==========================================================================

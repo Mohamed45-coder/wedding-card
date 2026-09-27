@@ -8,12 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. Populate Dynamic Content from config.js
   populateConfigData();
 
-  // 2. Initialize Theme & Audio
-  if (window.weddingTheme) window.weddingTheme.init();
+  // 2. Initialize Audio
   if (window.weddingAudio) window.weddingAudio.init();
 
   // 3. Initialize Interactive Components
-  if (window.weddingDoor) window.weddingDoor.init();
+  if (window.weddingHeroVideo) window.weddingHeroVideo.init();
   if (window.weddingScratchCard) window.weddingScratchCard.init();
   if (window.weddingCountdown) window.weddingCountdown.init();
   if (window.weddingPetals) window.weddingPetals.init();
@@ -40,10 +39,15 @@ function populateConfigData() {
   setElText('.cfg-bismillah-arabic', cfg.bismillahText);
   setElText('.cfg-bismillah-meaning', cfg.bismillahMeaning);
 
-  // Scratch card revealed data
-  setElText('#revealedWeddingDate', cfg.weddingDateDisplay);
-  setElText('#revealedWeddingTime', cfg.weddingTimeDisplay);
-  setElText('#revealedMuhurtham', cfg.muhurthamTimeDisplay);
+  // Scratch card heart revealed data
+  if (cfg.groom?.name) {
+    const groomShort = cfg.groom.name.replace(/^(Mohamed\s+)/i, '');
+    setElText('#revealedGroomName', groomShort);
+  }
+  if (cfg.bride?.name) {
+    const brideShort = cfg.bride.name.replace(/(\s+Kowsar)$/i, '');
+    setElText('#revealedBrideName', brideShort);
+  }
 
   // Venue information
   setElText('#venueName', cfg.venue.name);

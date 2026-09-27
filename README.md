@@ -41,7 +41,7 @@ Designed with a **Royal Gold, Ivory, and Deep Maroon** color palette and Islamic
    - Grand Palace address, hall details, and landmarks.
    - Embedded Google Maps view.
    - **Get Directions** button (Google Maps navigation).
-   - **Add to Calendar** button (generates `.ics` download & calendar event).
+   - **Add to Calendar** dropdown (1-click direct add to Google Calendar, Apple Calendar / iCal, Outlook, Yahoo Calendar, and `.ics` download).
 
 8. **Family Blessings**:
    - Symmetrical royal framed cards for the Groom's Family and Bride's Family.
@@ -64,7 +64,7 @@ Designed with a **Royal Gold, Ivory, and Deep Maroon** color palette and Islamic
 
 13. **Global Enhancements**:
     - Floating romantic rose petals & golden fairy dust particles.
-    - Dark Mode / Ivory & Gold Light Mode switcher.
+    - Royal Ivory & Gold theme design.
     - Back-to-Top button with circular SVG scroll progress ring.
     - Responsive mobile-first layout (Lighthouse 90+ score ready).
 
@@ -91,7 +91,7 @@ wedding-site/
     ├── timeline.js         # Dynamic timeline generator
     ├── guestbook.js        # Wishes form & localStorage persistence
     ├── rsvp.js             # RSVP form validation & WhatsApp submission
-    ├── utils.js            # Theme toggle, calendar .ics export, clipboard, scroll observer
+    ├── utils.js            # Calendar .ics export, clipboard, scroll observer
     └── app.js              # Main application initializer
 ```
 

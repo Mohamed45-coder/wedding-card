@@ -36,7 +36,6 @@ const WEDDING_CONFIG = {
   // Main Event Target Date & Time (Used for Countdown & Scratch Card)
   // Format: YYYY-MM-DDTHH:MM:SS
   weddingDate: "2027-01-02T17:00:00",
-  weddingDateDisplay: "Saturday, 2nd January 2027 (23rd Rajab 1448 Hijri)",
   weddingTimeDisplay: "Mehfil-E-Nikkah: 5:00 PM | Dawat-E-Valima (Reception): 7:00 PM Onwards",
   muhurthamTimeDisplay: "Mehfil-E-Nikkah: 5:00 PM | Dinner: 7:00 PM Onwards",
 
@@ -55,7 +54,7 @@ const WEDDING_CONFIG = {
     {
       id: "nikah-ceremony",
       title: "Mehfil-E-Nikkah",
-      date: "Saturday, 2nd January 2027 (23rd Rajab 1448 Hijri)",
+      date: "Saturday, 2nd January 2027",
       time: "05:00 PM",
       venue: "Perunthalaivar Kamarajar Community Hall",
       dressCode: "Traditional / Festive Ethnic",
@@ -65,7 +64,7 @@ const WEDDING_CONFIG = {
     {
       id: "valima-reception",
       title: "Dawat-E-Valima (Reception)",
-      date: "Saturday, 2nd January 2027 (23rd Rajab 1448 Hijri)",
+      date: "Saturday, 2nd January 2027",
       time: "Dinner: 07:00 PM Onwards",
       venue: "Perunthalaivar Kamarajar Community Hall",
       dressCode: "Elegant Traditional / Formal",
@@ -79,7 +78,7 @@ const WEDDING_CONFIG = {
     name: "Perunthalaivar Kamarajar Community Hall",
     hallName: "Perunthalaivar Kamarajar Community Hall",
     address: "225, SRP Koil street (North), Peravallur, Tiru.Vi.Ka Nagar, Perambur, Chennai - 600082",
-    landmark: "SRP Koil Street (North), Peravallur, Perambur",
+    landmark: "Opposite Bus depots",
     bloomQrUrl: "https://www.bubbbly.com/bloom?u=https%3A%2F%2Fmaps.app.goo.gl%2FWrunQKfkcurjyNUC9",
     googleMapsLink: "https://maps.google.com/?q=Perunthalaivar+K+Kamarajar+Thirumana+Maligai+225+SRP+Koil+Street+Peravallur+Perambur+Chennai+600082",
     contactPhones: ["+91 98765 43210"]
@@ -114,8 +113,8 @@ const WEDDING_CONFIG = {
   // Social Sharing & RSVP
   share: {
     whatsappNumber: "919876543210", // Number to receive RSVP via WhatsApp
-    shareTitle: "Wedding Invitation: Rahamathullah ❤️ Maseera",
-    shareMessage: "Together with our families, Rahamathullah & Maseera joyfully invite you to celebrate their wedding on Saturday, 2nd January 2027 (23rd Rajab 1448 Hijri). In Sha Allah, please view our royal wedding invitation card:",
+    shareTitle: "🌿✨ Wedding Invitation | Mohamed Rahamathullah & Maseera Kowsar",
+    shareMessage: "🌿✨ A little something special from our hearts… Mohamed Rahamathullah & Maseera Kowsar invite you to be part of a beautiful new beginning. 🤍 💌 Open the invitation and discover the rest…",
     inviteLink: window.location.href
   },
 

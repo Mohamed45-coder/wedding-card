@@ -1,7 +1,7 @@
 /**
  * ==========================================================================
  * ROYAL WEDDING INVITATION - UTILITIES & HELPERS
- * Theme toggle, Back to top, Calendar .ics export, Share & Toast alerts
+ * Back to top, Calendar .ics export, Share & Toast alerts
  * ==========================================================================
  */
 
@@ -25,45 +25,6 @@ window.showToast = function(message, duration = 3800) {
     setTimeout(() => toast.remove(), 350);
   }, duration);
 };
-
-// Theme Toggle (Dark / Light Mode)
-class WeddingThemeManager {
-  constructor() {
-    this.themeToggleBtn = document.getElementById('themeToggleBtn');
-    this.currentTheme = localStorage.getItem('royal_wedding_theme') || 'light';
-  }
-
-  init() {
-    this.applyTheme(this.currentTheme);
-    if (this.themeToggleBtn) {
-      this.themeToggleBtn.addEventListener('click', () => {
-        const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
-        this.applyTheme(newTheme);
-      });
-    }
-  }
-
-  applyTheme(theme) {
-    this.currentTheme = theme;
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('royal_wedding_theme', theme);
-
-    if (this.themeToggleBtn) {
-      const icon = this.themeToggleBtn.querySelector('svg');
-      if (icon) {
-        if (theme === 'dark') {
-          // Moon to Sun icon
-          icon.innerHTML = `<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
-          this.themeToggleBtn.setAttribute('aria-label', 'Switch to Ivory & Gold Light Theme');
-        } else {
-          // Sun to Moon icon
-          icon.innerHTML = `<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
-          this.themeToggleBtn.setAttribute('aria-label', 'Switch to Royal Dark Theme');
-        }
-      }
-    }
-  }
-}
 
 // Back to Top & Scroll Progress Ring
 class WeddingScrollManager {
@@ -112,21 +73,39 @@ class WeddingShareManager {
   }
 
   setupShareButtons() {
-    const waBtn = document.getElementById('shareWhatsAppBtn');
+    const openBtn = document.getElementById('openWhatsAppModalBtn');
+    const closeBtn = document.getElementById('closeWhatsAppModalBtn');
+    const cancelBtn = document.getElementById('cancelWhatsAppModalBtn');
+    const backdrop = document.getElementById('whatsappModalBackdrop');
+    const confirmBtn = document.getElementById('confirmShareWhatsAppBtn');
     const copyBtn = document.getElementById('copyLinkBtn');
-
-    const groomName = window.WEDDING_CONFIG?.groom?.name || 'Rahamathullah';
-    const brideName = window.WEDDING_CONFIG?.bride?.name || 'Maseera';
-    const dateText = window.WEDDING_CONFIG?.weddingDateDisplay || 'Saturday, 2nd January 2027';
     const currentUrl = window.location.href;
 
-    if (waBtn) {
-      const waText = encodeURIComponent(
-        `✨ *Royal Wedding Invitation* ✨\n\n` +
-        `Together with our families, *${groomName}* & *${brideName}* joyfully invite you to celebrate our wedding on *${dateText}*.\n\n` +
-        `Please open our interactive wedding invitation card here:\n🔗 ${currentUrl}`
-      );
-      waBtn.href = `https://api.whatsapp.com/send?text=${waText}`;
+    if (openBtn) {
+      openBtn.addEventListener('click', () => this.openWhatsAppModal());
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeWhatsAppModal());
+    }
+
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => this.closeWhatsAppModal());
+    }
+
+    if (backdrop) {
+      backdrop.addEventListener('click', () => this.closeWhatsAppModal());
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeWhatsAppModal();
+      }
+    });
+
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', () => this.shareToWhatsApp());
     }
 
     if (copyBtn) {
@@ -144,6 +123,62 @@ class WeddingShareManager {
     }
   }
 
+  openWhatsAppModal() {
+    const modal = document.getElementById('whatsappModal');
+    if (modal) {
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closeWhatsAppModal() {
+    const modal = document.getElementById('whatsappModal');
+    if (modal) {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+  }
+
+  async shareToWhatsApp() {
+    const currentUrl = window.location.href;
+    const shareMessage =
+      `🌿✨ *A little something special from our hearts…*\n\n` +
+      `*Mohamed Rahamathullah & Maseera Kowsar*\n` +
+      `invite you to be part of a beautiful new beginning. 🤍\n\n` +
+      `💌 *Open the invitation and discover the rest…*\n\n` +
+      `With love,\n` +
+      `*Rahamathullah & Maseera* 🌸\n\n` +
+      `🔗 ${currentUrl}`;
+
+    this.closeWhatsAppModal();
+
+    // Check if Web Share API with image file attachment is supported (mobile devices / native WhatsApp app)
+    if (navigator.share) {
+      try {
+        const imageRes = await fetch('assets/images/whatsapp_invite.png');
+        const blob = await imageRes.blob();
+        const file = new File([blob], 'wedding_invitation.png', { type: 'image/png' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: 'Mohamed Rahamathullah & Maseera Kowsar | Wedding Invitation',
+            text: shareMessage,
+            files: [file]
+          });
+          return;
+        }
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+
+    // Direct WhatsApp share URL fallback
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+    window.open(waUrl, '_blank');
+  }
+
   fallbackCopy(text) {
     const input = document.createElement('input');
     input.value = text;
@@ -155,39 +190,105 @@ class WeddingShareManager {
   }
 
   setupCalendarButton() {
+    const wrapper = document.getElementById('calendarDropdownWrapper');
     const calBtn = document.getElementById('addToCalendarBtn');
-    if (!calBtn) return;
+    const menu = document.getElementById('calendarDropdownMenu');
+    if (!calBtn || !menu) return;
 
+    const config = window.WEDDING_CONFIG;
+    const groom = config?.groom?.name || 'Mohamed Rahamathullah';
+    const bride = config?.bride?.name || 'Maseera Kowsar';
+    const venueName = config?.venue?.name || 'Perunthalaivar Kamarajar Community Hall';
+    const venueAddress = config?.venue?.address || '225, SRP Koil street (North), Peravallur, Perambur, Chennai - 600082';
+    const location = `${venueName}, ${venueAddress}`;
+    const eventTitle = `Wedding: ${groom} & ${bride}`;
+    const description = `Celebration of the Holy Matrimony of ${groom} & ${bride}.\n\nSchedule:\n• Mehfil-E-Nikkah: 5:00 PM\n• Dawat-E-Valima (Reception): 7:00 PM Onwards\n\nVenue: ${venueName}, ${venueAddress}\nIn Sha Allah, looking forward to your presence and prayers!`;
+
+    // Date & times (2nd January 2027, 5:00 PM - 11:00 PM IST = UTC+5:30)
+    // 2027-01-02 17:00:00 IST = 2027-01-02 11:30:00 UTC
+    // 2027-01-02 23:00:00 IST = 2027-01-02 17:30:00 UTC
+    const startIsoUtc = '20270102T113000Z';
+    const endIsoUtc = '20270102T173000Z';
+    const startIsoLocal = '2027-01-02T17:00:00+05:30';
+    const endIsoLocal = '2027-01-02T23:00:00+05:30';
+
+    // 1. Google Calendar Link
+    const googleCalLink = document.getElementById('calGoogle');
+    if (googleCalLink) {
+      const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+        `&text=${encodeURIComponent(eventTitle)}` +
+        `&dates=${startIsoUtc}/${endIsoUtc}` +
+        `&details=${encodeURIComponent(description)}` +
+        `&location=${encodeURIComponent(location)}` +
+        `&ctz=Asia/Kolkata`;
+      googleCalLink.href = googleUrl;
+      googleCalLink.addEventListener('click', () => {
+        wrapper?.classList.remove('open');
+        calBtn.setAttribute('aria-expanded', 'false');
+        window.showToast('📅 Opening Google Calendar...');
+      });
+    }
+
+    // 2. Apple Calendar Link / Action
+    const appleCalLink = document.getElementById('calApple');
+    if (appleCalLink) {
+      appleCalLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        wrapper?.classList.remove('open');
+        calBtn.setAttribute('aria-expanded', 'false');
+        this.downloadIcsFile();
+        window.showToast('📅 Added to Apple Calendar / iCal!');
+      });
+    }
+
+    // Toggle dropdown open/close on button click
     calBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.downloadIcsFile();
+      e.stopPropagation();
+      const isOpen = wrapper?.classList.toggle('open');
+      calBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (wrapper && !wrapper.contains(e.target)) {
+        wrapper.classList.remove('open');
+        calBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && wrapper?.classList.contains('open')) {
+        wrapper.classList.remove('open');
+        calBtn.setAttribute('aria-expanded', 'false');
+        calBtn.focus();
+      }
     });
   }
 
   downloadIcsFile() {
     const config = window.WEDDING_CONFIG;
-    const groom = config?.groom?.name || 'Rahamathullah';
-    const bride = config?.bride?.name || 'Maseera';
+    const groom = config?.groom?.name || 'Mohamed Rahamathullah';
+    const bride = config?.bride?.name || 'Maseera Kowsar';
     const venueName = config?.venue?.name || 'Perunthalaivar Kamarajar Community Hall';
-    const venueAddress = config?.venue?.address || 'Perambur, Chennai';
+    const venueAddress = config?.venue?.address || '225, SRP Koil street (North), Peravallur, Perambur, Chennai - 600082';
 
-    const startDate = "20270102T170000";
-    const endDate = "20270102T230000";
+    const startDateUtc = "20270102T113000Z";
+    const endDateUtc = "20270102T173000Z";
 
     const icsContent = 
 `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Royal Wedding//Mohamed and Fathima//EN
 PRODID:-//Royal Wedding//Rahamathullah and Maseera//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:wedding-${Date.now()}@royalinvitation.com
-DTSTAMP:${startDate}Z
-DTSTART:${startDate}
-DTEND:${endDate}
-SUMMARY:Wedding of ${groom} ❤️ ${bride}
-DESCRIPTION:Celebration of the Holy Matrimony of ${groom} & ${bride}. Together with their families.
+UID:wedding-20270102-rahamathullah-maseera@royalwedding.com
+DTSTAMP:${startDateUtc}
+DTSTART:${startDateUtc}
+DTEND:${endDateUtc}
+SUMMARY:Wedding: ${groom} ❤️ ${bride}
+DESCRIPTION:Celebration of the Holy Matrimony of ${groom} & ${bride}. Together with their families.\\n\\nSchedule:\\n• Mehfil-E-Nikkah: 5:00 PM\\n• Dawat-E-Valima (Reception): 7:00 PM Onwards\\n\\nVenue: ${venueName}, ${venueAddress}
 LOCATION:${venueName}, ${venueAddress}
 STATUS:CONFIRMED
 BEGIN:VALARM
@@ -201,7 +302,7 @@ END:VCALENDAR`;
     const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.setAttribute('download', `Wedding-${groom}-and-${bride}.ics`);
+    link.setAttribute('download', `Wedding-${groom.replace(/\s+/g, '-')}-and-${bride.replace(/\s+/g, '-')}.ics`);
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -239,7 +340,6 @@ class WeddingScrollObserver {
   }
 }
 
-window.weddingTheme = new WeddingThemeManager();
 window.weddingScroll = new WeddingScrollManager();
 window.weddingShare = new WeddingShareManager();
 window.weddingObserver = new WeddingScrollObserver();

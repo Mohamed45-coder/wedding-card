@@ -71,51 +71,6 @@
   --transition-smooth: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Dark Mode Theme (Obsidian & Royal Midnight Maroon) */
-[data-theme="dark"] {
-  --color-maroon-deep: #120306;
-  --color-maroon: #26060B;
-  --color-maroon-rich: #420A13;
-  --color-maroon-light: #5E101D;
-  --color-maroon-subtle: #240A10;
-
-  --color-gold-deep: #B3861B;
-  --color-gold: #E5B842;
-  --color-gold-rich: #F3CA5A;
-  --color-gold-light: #FFEAA8;
-  --color-gold-shimmer: #FFF4D1;
-
-  --color-ivory-dark: #1E1A1B;
-  --color-ivory: #161214;
-  --color-ivory-light: #252022;
-  --color-cream: #1A1417;
-
-  --color-text-primary: #F8F4EB;
-  --color-text-secondary: #DDD0BF;
-  --color-text-muted: #A89899;
-  --color-text-gold: #F3CA5A;
-  --color-text-light: #FAF7F0;
-
-  --bg-primary: #0F090B;
-  --bg-secondary: #190F12;
-  --bg-card: rgba(30, 16, 21, 0.85);
-  --bg-card-solid: #221217;
-  --bg-card-hover: rgba(45, 23, 30, 0.95);
-  --bg-glass: rgba(26, 12, 16, 0.7);
-  --bg-glass-maroon: rgba(45, 10, 17, 0.9);
-
-  --border-gold: rgba(229, 184, 66, 0.3);
-  --border-gold-solid: #E5B842;
-  --border-gold-rich: rgba(243, 202, 90, 0.55);
-  --border-card: rgba(229, 184, 66, 0.2);
-
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.8);
-  --shadow-gold: 0 0 25px rgba(243, 202, 90, 0.25);
-  --shadow-maroon: 0 10px 30px rgba(0, 0, 0, 0.6);
-}
-
 /* ==========================================================================
    RESET & BASE STYLES
    ========================================================================== */
@@ -127,7 +82,6 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y proximity;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
 }
@@ -148,10 +102,12 @@ body {
   min-height: 100dvh;
 }
 
-body.door-locked {
-  overflow: hidden;
-  height: 100vh;
-  height: 100dvh;
+body.video-locked,
+html.video-locked {
+  overflow: hidden !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  touch-action: none;
 }
 
 /* Typography elements */
@@ -160,13 +116,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: var(--color-maroon);
   line-height: 1.25;
-}
-
-[data-theme="dark"] h1,
-[data-theme="dark"] h2,
-[data-theme="dark"] h3,
-[data-theme="dark"] h4 {
-  color: var(--color-gold-rich);
 }
 
 p {
@@ -234,22 +183,17 @@ button {
 .section {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
-  padding: max(2rem, calc(1.5rem + env(safe-area-inset-top))) 1rem max(2rem, calc(1.5rem + env(safe-area-inset-bottom))) 1rem;
-  overflow-x: hidden;
+  padding: max(3.5rem, calc(2.5rem + env(safe-area-inset-top))) 1rem max(3.5rem, calc(2.5rem + env(safe-area-inset-bottom))) 1rem;
 }
 
 @media (min-width: 768px) {
   .section {
-    padding: max(4rem, calc(2.5rem + env(safe-area-inset-top))) 2rem max(4rem, calc(2.5rem + env(safe-area-inset-bottom))) 2rem;
+    padding: max(5rem, calc(3.5rem + env(safe-area-inset-top))) 2rem max(5rem, calc(3.5rem + env(safe-area-inset-bottom))) 2rem;
   }
 }
 
@@ -476,7 +420,7 @@ button {
 }
 
 /* ==========================================================================
-   FLOATING ACTION BUTTONS (Audio, Theme, Back-to-Top)
+   FLOATING ACTION BUTTONS (Audio, Back-to-Top)
    ========================================================================== */
 .floating-controls {
   position: fixed;
@@ -502,11 +446,6 @@ button {
   transition: all var(--transition-normal);
   cursor: pointer;
   position: relative;
-}
-
-[data-theme="dark"] .floating-btn {
-  color: var(--color-gold-rich);
-  background: var(--bg-card-solid);
 }
 
 .floating-btn:hover {
