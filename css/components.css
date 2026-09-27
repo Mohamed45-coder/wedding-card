@@ -23,6 +23,11 @@
   z-index: 20;
 }
 
+body.video-completed .hero-video-section {
+  animation: hero-section-bounce 3.2s cubic-bezier(0.28, 0.84, 0.42, 1) 1 forwards;
+  will-change: transform;
+}
+
 .video-container {
   position: relative;
   width: 100%;
@@ -220,8 +225,12 @@ body.video-completed .video-scroll-prompt {
   justify-content: center;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: none;
+  touch-action: pan-y;
   filter: drop-shadow(0 14px 32px rgba(58, 10, 16, 0.16));
+}
+
+.heart-canvas-container.revealed {
+  touch-action: pan-y !important;
 }
 
 /* Underneath Revealed Content inside Heart */
@@ -350,7 +359,7 @@ body.video-completed .video-scroll-prompt {
   touch-action: none;
   clip-path: url(#heartClip);
   -webkit-clip-path: url(#heartClip);
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #scratchCanvas:active {
@@ -359,7 +368,8 @@ body.video-completed .video-scroll-prompt {
 
 #scratchCanvas.revealed {
   opacity: 0;
-  pointer-events: none;
+  pointer-events: none !important;
+  touch-action: pan-y !important;
 }
 
 /* Falling Rose Petals Canvas */

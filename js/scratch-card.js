@@ -142,7 +142,7 @@ class WeddingScratchCard {
     this.ctx.scale(this.dpr, this.dpr);
 
     // Feathered brush
-    this.brushRadius = Math.max(26, Math.min(38, Math.round(this.width * 0.095)));
+    this.brushRadius = Math.max(30, Math.min(45, Math.round(this.width * 0.11)));
     this.createFeatheredBrush(this.brushRadius);
 
     // Heart path
@@ -225,11 +225,10 @@ class WeddingScratchCard {
 
   /**
    * Mark grid cells as scratched within brush radius of point (x, y).
-   * Uses effective radius (70% of brush) to match the feathered brush's
-   * visible erase zone.
+   * Accurately matches the feathered brush's visible erase zone.
    */
   _markGridScratched(x, y) {
-    const effectiveR = this.brushRadius * 0.7;
+    const effectiveR = this.brushRadius * 0.95;
     const step = this._gridStep;
     const rSq = effectiveR * effectiveR;
 
@@ -451,7 +450,10 @@ class WeddingScratchCard {
     window.addEventListener('mouseup', () => this.handleEnd());
 
     this.canvas.addEventListener('touchstart', (e) => this.handleStart(e), { passive: false });
-    window.addEventListener('touchmove', (e) => this.handleMove(e), { passive: false });
+    this.canvas.addEventListener('touchmove', (e) => this.handleMove(e), { passive: false });
+    window.addEventListener('touchmove', (e) => {
+      if (this.isDrawing) this.handleMove(e);
+    }, { passive: false });
     window.addEventListener('touchend', () => this.handleEnd());
     window.addEventListener('touchcancel', () => this.handleEnd());
   }
@@ -512,7 +514,7 @@ class WeddingScratchCard {
       this._calcTimer = setTimeout(() => {
         this._updateProgress();
         this._calcTimer = null;
-      }, 60);
+      }, 50);
     }
   }
 
@@ -539,7 +541,7 @@ class WeddingScratchCard {
       this.progressFill.style.width = `${displayPct}%`;
     }
 
-    // Check threshold
+    // Check threshold (50%)
     if (percentage >= this.scratchThreshold) {
       this.startAutoReveal();
     }
@@ -589,14 +591,13 @@ class WeddingScratchCard {
 
   /* -----------------------------------------------------------
      SMOOTH AUTO-REVEAL (Triggered at 50%)
-     Uses a clean CSS opacity fade instead of ugly sweep lines.
-     The canvas gracefully fades to transparent revealing the
-     content beneath.
+     Gracefully reveals the special date and enables next sections.
      ----------------------------------------------------------- */
   startAutoReveal() {
     if (this.isAutoScratching || this.isRevealed) return;
     this.isAutoScratching = true;
     this.isDrawing = false;
+    this.lastPoint = null;
 
     // Immediately unlock downstream sections
     document.body.classList.remove('scratch-locked');
@@ -611,24 +612,34 @@ class WeddingScratchCard {
 
     // Fill progress bar to 100%
     if (this.progressFill) {
-      this.progressFill.style.transition = 'width 0.8s ease-out';
+      this.progressFill.style.transition = 'width 0.4s ease-out';
       this.progressFill.style.width = '100%';
     }
 
-    // Spawn a burst of celebration petals
+    // Spawn celebration petals
     if (this.petalEngine) {
-      this.petalEngine.celebrateFlurry(20);
+      this.petalEngine.celebrateFlurry(24);
     }
 
-    // Smooth CSS opacity fade on the canvas (transition already in CSS)
-    // The #scratchCanvas has: transition: opacity 0.85s cubic-bezier(...)
-    // Adding .revealed sets opacity: 0
-    this.canvas.classList.add('revealed');
+    // Smooth CSS opacity fade on the canvas
+    if (this.canvas) {
+      this.canvas.classList.add('revealed');
+      this.canvas.style.pointerEvents = 'none';
+    }
+    if (this.container) {
+      this.container.classList.add('revealed');
+      this.container.style.touchAction = 'pan-y';
+    }
 
-    // After the fade completes, finalize
+    // Immediately observe and animate newly visible sections
+    if (window.weddingObserver && typeof window.weddingObserver.init === 'function') {
+      window.weddingObserver.init();
+    }
+
+    // After fade completes, finalize
     setTimeout(() => {
       this.triggerCompleteReveal();
-    }, 900);
+    }, 600);
   }
 
   /* -----------------------------------------------------------
@@ -647,12 +658,20 @@ class WeddingScratchCard {
     // Ensure everything is unlocked
     document.body.classList.remove('scratch-locked');
 
+    if (this.canvas) {
+      this.canvas.classList.add('revealed');
+      this.canvas.style.display = 'none';
+      this.canvas.style.pointerEvents = 'none';
+    }
+    if (this.container) {
+      this.container.classList.add('revealed');
+      this.container.style.touchAction = 'pan-y';
+    }
+
     // Re-trigger scroll observer for newly visible sections
-    setTimeout(() => {
-      if (window.weddingObserver && typeof window.weddingObserver.init === 'function') {
-        window.weddingObserver.init();
-      }
-    }, 100);
+    if (window.weddingObserver && typeof window.weddingObserver.init === 'function') {
+      window.weddingObserver.init();
+    }
 
     // Launch celebration effects
     if (window.weddingCelebration && typeof window.weddingCelebration.launch === 'function') {
