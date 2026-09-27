@@ -31,10 +31,20 @@ class WeddingScrollManager {
   constructor() {
     this.backToTopBtn = document.getElementById('backToTopBtn');
     this.progressCircle = document.getElementById('scrollProgressCircle');
+    this._ticking = false;
   }
 
   init() {
-    window.addEventListener('scroll', () => this.handleScroll(), { passive: true });
+    window.addEventListener('scroll', () => {
+      if (!this._ticking) {
+        window.requestAnimationFrame(() => {
+          this.handleScroll();
+          this._ticking = false;
+        });
+        this._ticking = true;
+      }
+    }, { passive: true });
+
     if (this.backToTopBtn) {
       this.backToTopBtn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -326,11 +336,12 @@ class WeddingScrollObserver {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('active');
+            this.observer.unobserve(entry.target);
           }
         });
       }, {
-        threshold: 0.08,
-        rootMargin: '0px 0px -20px 0px'
+        threshold: 0.02,
+        rootMargin: '0px 0px 60px 0px'
       });
     }
 

@@ -78,7 +78,7 @@ const WEDDING_CONFIG = {
     name: "Perunthalaivar Kamarajar Community Hall",
     hallName: "Perunthalaivar Kamarajar Community Hall",
     address: "225, SRP Koil street (North), Peravallur, Tiru.Vi.Ka Nagar, Perambur, Chennai - 600082",
-    landmark: "Opposite Bus depots",
+    landmark: "Near Thiru.Vi.Ka. Nagar Bus Stop",
     bloomQrUrl: "https://www.bubbbly.com/bloom?u=https%3A%2F%2Fmaps.app.goo.gl%2FWrunQKfkcurjyNUC9",
     googleMapsLink: "https://maps.google.com/?q=Perunthalaivar+K+Kamarajar+Thirumana+Maligai+225+SRP+Koil+Street+Peravallur+Perambur+Chennai+600082",
     contactPhones: ["+91 98765 43210"]

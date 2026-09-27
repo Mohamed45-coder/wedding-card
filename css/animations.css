@@ -7,9 +7,8 @@
 /* Scroll Reveal Base Classes */
 .reveal {
   opacity: 0;
-  transform: translateY(35px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translateY(16px);
+  transition: opacity 0.48s cubic-bezier(0.25, 1, 0.5, 1), transform 0.48s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .reveal.active {
@@ -17,15 +16,15 @@
   transform: translateY(0);
 }
 
-.reveal-delay-1 { transition-delay: 0.15s; }
-.reveal-delay-2 { transition-delay: 0.3s; }
-.reveal-delay-3 { transition-delay: 0.45s; }
-.reveal-delay-4 { transition-delay: 0.6s; }
+.reveal-delay-1 { transition-delay: 0.06s; }
+.reveal-delay-2 { transition-delay: 0.12s; }
+.reveal-delay-3 { transition-delay: 0.18s; }
+.reveal-delay-4 { transition-delay: 0.24s; }
 
 .reveal-scale {
   opacity: 0;
-  transform: scale(0.92) translateY(20px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.96) translateY(12px);
+  transition: opacity 0.48s cubic-bezier(0.25, 1, 0.5, 1), transform 0.48s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .reveal-scale.active {

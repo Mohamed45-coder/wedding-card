@@ -81,7 +81,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
 }
@@ -92,7 +91,6 @@ body {
   color: var(--color-text-primary);
   line-height: 1.65;
   overflow-x: hidden;
-  transition: background-color var(--transition-normal), color var(--transition-normal);
   background-image: 
     radial-gradient(var(--border-gold) 1px, transparent 1px),
     radial-gradient(rgba(201, 154, 44, 0.08) 1px, transparent 1px);
@@ -100,14 +98,6 @@ body {
   background-position: 0 0, 20px 20px;
   min-height: 100vh;
   min-height: 100dvh;
-}
-
-body.video-locked,
-html.video-locked {
-  overflow: hidden !important;
-  height: 100vh !important;
-  height: 100dvh !important;
-  touch-action: none;
 }
 
 /* Typography elements */
