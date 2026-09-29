@@ -107,7 +107,7 @@ const WEDDING_CONFIG = {
     autoPlayAfterDoorOpen: true,
     defaultMuted: false,
     useSynthesizer: false, // Set false to use custom background audio track
-    customAudioUrl: "assets/tunes/tera_mera_pyar_amar_1.mp3" // Background audio track
+    customAudioUrl: "assets/tunes/tera_mera_pyar_amar_1.m4a" // Background audio track
   },
 
   // Social Sharing & RSVP

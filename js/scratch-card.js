@@ -4,7 +4,7 @@
  * Interactive HTML5 Canvas heart-shaped scratch & reveal component.
  *
  * Key design decisions:
- *  - Uses the actual flower image (scratch_flowers.jpg) as the cover.
+ *  - Uses the actual flower image (scratch_flowers.webp) as the cover.
  *  - Percentage tracking via a GRID of cells (no getImageData needed),
  *    so it works even when the canvas is tainted by cross-origin images.
  *  - 50% threshold triggers a smooth CSS opacity fade (not ugly sweeps).
@@ -77,7 +77,7 @@ class WeddingScratchCard {
       this.floralImgLoaded = false;
       // Procedural fallback is already drawn by setupCanvas
     };
-    this.floralImg.src = 'assets/images/scratch_flowers.jpg';
+    this.floralImg.src = 'assets/images/scratch_flowers.webp';
 
     // Initial canvas setup (draws procedural fallback if image not yet loaded)
     this.setupCanvas();
