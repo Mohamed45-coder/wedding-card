@@ -167,7 +167,7 @@ class WeddingShareManager {
     // Check if Web Share API with image file attachment is supported (mobile devices / native WhatsApp app)
     if (navigator.share) {
       try {
-        const imageRes = await fetch('assets/images/scratch_flowers.webp');
+        const imageRes = await fetch('assets/images/whatsapp_invite.webp');
         const blob = await imageRes.blob();
         const file = new File([blob], 'wedding_invitation.png', { type: 'image/png' });
 
