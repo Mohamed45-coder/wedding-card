@@ -19,6 +19,7 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/images/fevicon.webp">
   <link rel="apple-touch-icon" href="assets/images/fevicon.webp">
+  <link rel="preload" as="image" href="assets/images/hero_poster.webp" type="image/webp">
 
   <!-- Google Fonts: Luxury Wedding Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +31,105 @@
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/components.css">
 
+  <!-- Critical Initial Loader CSS (Guarantees zero black flash on initial paint) -->
+  <style>
+    #weddingInvitationLoader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #1a0508;
+      background-image: url('assets/images/hero_poster.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s ease;
+      will-change: opacity;
+    }
+    #weddingInvitationLoader::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(24, 5, 9, 0.58) 0%, rgba(13, 2, 4, 0.82) 100%);
+      pointer-events: none;
+    }
+    .loader-glass-card {
+      position: relative;
+      z-index: 2;
+      width: min(88vw, 360px);
+      padding: 2.2rem 1.8rem;
+      background: rgba(43, 7, 13, 0.58);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(221, 174, 59, 0.38);
+      border-radius: 20px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 24px rgba(221, 174, 59, 0.12);
+      text-align: center;
+      color: #FDFCF8;
+      user-select: none;
+      -webkit-user-select: none;
+      animation: loader-card-float 4s ease-in-out infinite alternate;
+    }
+    .loader-ornament {
+      font-size: 1rem;
+      color: #C99A2C;
+      margin-bottom: 0.75rem;
+      letter-spacing: 4px;
+      opacity: 0.9;
+    }
+    .loader-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.15rem, 3.8vw, 1.35rem);
+      font-weight: 600;
+      color: #F7E5A9;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.5px;
+      line-height: 1.3;
+    }
+    .loader-subtitle {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-size: clamp(0.78rem, 2.5vw, 0.86rem);
+      font-weight: 400;
+      color: rgba(253, 252, 248, 0.75);
+      letter-spacing: 1.2px;
+      margin-bottom: 1.5rem;
+    }
+    .loader-dots {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .loader-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #DDAE3B;
+      box-shadow: 0 0 8px rgba(221, 174, 59, 0.7);
+      animation: loader-dot-pulse 1.5s ease-in-out infinite;
+    }
+    .loader-dot:nth-child(2) {
+      animation-delay: 0.22s;
+    }
+    .loader-dot:nth-child(3) {
+      animation-delay: 0.44s;
+    }
+    #weddingInvitationLoader.loader-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+  </style>
+
   <!-- Immediate Scroll Reset on Page Load / Refresh -->
   <script>
     if ('scrollRestoration' in history) {
@@ -39,6 +139,22 @@
   </script>
 </head>
 <body class="video-locked scratch-locked">
+
+  <!-- =========================================================================
+       INITIAL LUXURY LOADING SCREEN (Hero Poster Background + Glassmorphism)
+       ========================================================================= -->
+  <div id="weddingInvitationLoader" class="wedding-invitation-loader" role="status" aria-live="polite">
+    <div class="loader-glass-card">
+      <div class="loader-ornament" aria-hidden="true">❖</div>
+      <h2 class="loader-title">Preparing your invitation...</h2>
+      <p class="loader-subtitle">Please wait a moment</p>
+      <div class="loader-dots" aria-label="Loading invitation">
+        <span class="loader-dot"></span>
+        <span class="loader-dot"></span>
+        <span class="loader-dot"></span>
+      </div>
+    </div>
+  </div>
 
   <!-- Canvas Particle Layers -->
   <canvas id="petalsCanvas" aria-hidden="true"></canvas>
@@ -78,6 +194,7 @@
       <video
         id="heroVideo"
         class="hero-video"
+        poster="assets/images/hero_poster.webp"
         playsinline
         webkit-playsinline
         muted
@@ -456,7 +573,7 @@
               </div>
               <div class="form-group">
                 <label for="wishMessage" class="form-label">Your Blessings / Message</label>
-                <textarea id="wishMessage" class="form-textarea" rows="4" placeholder="Write your heartfelt congratulations and Duas..." required></textarea>
+                <textarea id="wishMessage" class="form-textarea" rows="3" placeholder="Write your heartfelt congratulations and Duas..." required></textarea>
               </div>
               <button type="submit" class="btn-royal" style="width:100%;">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -465,8 +582,8 @@
             </form>
           </div>
 
-          <!-- Dynamic Wishes Feed -->
-          <div id="wishesList" class="wishes-list reveal reveal-delay-1"></div>
+          <!-- 3D Luxury Invitation Card Carousel -->
+          <div id="wishesList" class="wishes-carousel-wrapper reveal reveal-delay-1"></div>
         </div>
       </div>
     </section>
@@ -619,6 +736,7 @@
   <script src="js/config.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/hero-video.js"></script>
+  <script src="js/loader.js"></script>
   <script src="js/scratch-card.js"></script>
   <script src="js/countdown.js"></script>
   <script src="js/celebration.js"></script>

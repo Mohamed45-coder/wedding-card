@@ -14,10 +14,78 @@ class WeddingAudioController {
     this.ambientInterval = null;
     this.gainNode = null;
     this.customAudio = null;
+    this.isReady = false;
   }
 
   init() {
     this.setupAudioButton();
+  }
+
+  // Preload and prepare audio so it is primed and ready to play without latency
+  prepareAudio() {
+    return new Promise((resolve) => {
+      const musicConfig = window.WEDDING_CONFIG?.music;
+
+      // If procedural synthesizer or no audio track configured, it is ready immediately
+      if (!musicConfig || musicConfig.useSynthesizer || !musicConfig.customAudioUrl) {
+        this.isReady = true;
+        resolve();
+        return;
+      }
+
+      if (!this.customAudio) {
+        this.customAudio = new Audio(musicConfig.customAudioUrl);
+        this.customAudio.loop = true;
+        this.customAudio.volume = 0.6;
+        this.customAudio.preload = 'auto';
+
+        // Continuous loop fallback to guarantee seamless replay across all browsers
+        this.customAudio.addEventListener('ended', () => {
+          this.customAudio.currentTime = 0;
+          this.customAudio.play().catch(() => {});
+        });
+      }
+
+      // If readyState is HAVE_CURRENT_DATA (2) or higher, audio is buffered and ready
+      if (this.customAudio.readyState >= 2) {
+        this.isReady = true;
+        resolve();
+        return;
+      }
+
+      let isFinished = false;
+      const onReady = () => {
+        if (isFinished) return;
+        isFinished = true;
+        cleanup();
+        this.isReady = true;
+        resolve();
+      };
+
+      const cleanup = () => {
+        this.customAudio.removeEventListener('canplay', onReady);
+        this.customAudio.removeEventListener('canplaythrough', onReady);
+        this.customAudio.removeEventListener('loadeddata', onReady);
+        this.customAudio.removeEventListener('error', onReady);
+      };
+
+      this.customAudio.addEventListener('canplay', onReady, { once: true });
+      this.customAudio.addEventListener('canplaythrough', onReady, { once: true });
+      this.customAudio.addEventListener('loadeddata', onReady, { once: true });
+      this.customAudio.addEventListener('error', onReady, { once: true });
+
+      // Fallback timeout so slow networks/restrictions don't hang indefinitely
+      setTimeout(() => {
+        if (!isFinished) {
+          isFinished = true;
+          cleanup();
+          this.isReady = true;
+          resolve();
+        }
+      }, 8000);
+
+      this.customAudio.load();
+    });
   }
 
   // Initialize Web Audio Context on first user gesture

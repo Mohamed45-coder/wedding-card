@@ -5,6 +5,9 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // 0. Initialize Loading Screen & Media Readiness Coordinator
+  if (window.weddingLoader) window.weddingLoader.init();
+
   // 1. Populate Dynamic Content from config.js
   populateConfigData();
 

@@ -300,3 +300,26 @@
   }
 }
 
+/* ==========================================================================
+   INITIAL LOADING SCREEN KEYFRAMES
+   ========================================================================== */
+@keyframes loader-dot-pulse {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes loader-card-float {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-4px);
+  }
+}
+

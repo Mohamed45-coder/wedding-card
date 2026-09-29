@@ -100,6 +100,14 @@ body {
   min-height: 100dvh;
 }
 
+html.video-locked,
+body.video-locked {
+  overflow: hidden !important;
+  height: 100% !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+}
+
 /* Typography elements */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif-display);
