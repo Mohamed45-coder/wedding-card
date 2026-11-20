@@ -53,8 +53,15 @@ class WeddingHeroVideoController {
 
     // 5. Video completion event
     this.video.addEventListener('ended', () => {
+      this.setBuffering(false);
       this.handleVideoEnded();
     });
+
+    // Buffering indicator: show while stalled mid-playback, hide once frames flow
+    this.video.addEventListener('waiting', () => {
+      if (this.hasStarted && !this.isCompleted) this.setBuffering(true);
+    });
+    this.video.addEventListener('playing', () => this.setBuffering(false));
 
     // 6. Smooth scroll on scroll prompt click
     if (this.scrollPrompt) {
@@ -113,13 +120,30 @@ class WeddingHeroVideoController {
       window.weddingAudio.startAmbientMusic();
     }
 
+    // If the video isn't buffered enough yet, show a loading indicator so the
+    // tap is visibly acknowledged; it plays automatically once data arrives.
+    if (this.video.readyState < 3) {
+      this.setBuffering(true);
+    }
+
     // Play video
     const playPromise = this.video.play();
     if (playPromise !== undefined) {
       playPromise.catch((err) => {
         console.warn('Video playback error:', err);
+        // Allow the guest to tap again instead of leaving them stuck
+        this.setBuffering(false);
+        this.hasStarted = false;
+        if (this.videoContainer) {
+          this.videoContainer.style.cursor = 'pointer';
+        }
       });
     }
+  }
+
+  setBuffering(isBuffering) {
+    if (!this.videoContainer) return;
+    this.videoContainer.classList.toggle('is-buffering', isBuffering);
   }
 
   handleVideoEnded() {

@@ -3,7 +3,8 @@
  * ROYAL WEDDING INVITATION - INITIAL LOADING CONTROLLER
  * Ensures the website starts with an elegant glassmorphism loading screen
  * using the hero video's first frame, and smoothly reveals the invitation
- * ONLY when both the hero video and audio are primed and ready to play.
+ * ONLY when the hero video is ready to play, so a tap always starts it.
+ * Background music is fetched afterwards so it never delays the reveal.
  * ==========================================================================
  */
 
@@ -38,16 +39,13 @@ class WeddingLoaderController {
     window.addEventListener('pointerdown', unlockAudio, { passive: true, once: true });
     window.addEventListener('click', unlockAudio, { passive: true, once: true });
 
-    // 2. Concurrently prepare both video and audio
+    // 2. Wait only for the hero video (the first thing the guest taps)
     this.coordinateReadiness();
   }
 
   async coordinateReadiness() {
-    const videoPromise = this.prepareVideo();
-    const audioPromise = this.prepareAudio();
-
     try {
-      await Promise.all([videoPromise, audioPromise]);
+      await this.prepareVideo();
     } catch (err) {
       console.warn('[Loader] Media preparation note:', err);
     }
@@ -58,7 +56,30 @@ class WeddingLoaderController {
 
     setTimeout(() => {
       this.dismiss();
+      this.scheduleAudioPreload();
     }, remainingTime);
+  }
+
+  // Fetch the music only after the video has buffered, so the two
+  // downloads don't compete for bandwidth on slow mobile networks.
+  scheduleAudioPreload() {
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      if (window.weddingAudio && typeof window.weddingAudio.prepareAudio === 'function') {
+        window.weddingAudio.prepareAudio().catch(() => {});
+      }
+    };
+
+    const video = document.getElementById('heroVideo');
+    if (!video || video.readyState >= 4) {
+      start();
+      return;
+    }
+    video.addEventListener('canplaythrough', start, { once: true });
+    video.addEventListener('playing', start, { once: true });
+    setTimeout(start, 5000);
   }
 
   prepareVideo() {
@@ -104,34 +125,16 @@ class WeddingLoaderController {
         }
       }, 8000);
 
-      // Trigger video buffering
+      // Trigger video buffering. Only call load() if the browser hasn't
+      // already started fetching (preload="auto"), otherwise it would abort
+      // and restart the download from zero.
       if (video.preload !== 'auto') {
         video.preload = 'auto';
       }
-      video.load();
-    });
-  }
-
-  prepareAudio() {
-    return new Promise((resolve) => {
-      // If audio controller is already initialized
-      if (window.weddingAudio && typeof window.weddingAudio.prepareAudio === 'function') {
-        window.weddingAudio.prepareAudio().then(resolve).catch(resolve);
-        return;
+      if (video.networkState === HTMLMediaElement.NETWORK_EMPTY ||
+          (video.networkState === HTMLMediaElement.NETWORK_IDLE && video.readyState === 0)) {
+        video.load();
       }
-
-      // If audio controller hasn't been instantiated yet, check briefly
-      let attempts = 0;
-      const pollAudio = setInterval(() => {
-        attempts++;
-        if (window.weddingAudio && typeof window.weddingAudio.prepareAudio === 'function') {
-          clearInterval(pollAudio);
-          window.weddingAudio.prepareAudio().then(resolve).catch(resolve);
-        } else if (attempts > 30) {
-          clearInterval(pollAudio);
-          resolve();
-        }
-      }, 50);
     });
   }
 

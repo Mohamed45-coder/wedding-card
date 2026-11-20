@@ -110,9 +110,8 @@ const WEDDING_CONFIG = {
     customAudioUrl: "assets/tunes/tera_mera_pyar_amar_1.m4a" // Background audio track
   },
 
-  // Social Sharing & RSVP
+  // Social Sharing
   share: {
-    whatsappNumber: "919876543210", // Number to receive RSVP via WhatsApp
     shareTitle: "🌿✨ Wedding Invitation | Mohamed Rahamathullah & Maseera Kowsar",
     shareMessage: "🌿✨ A little something special from our hearts… Mohamed Rahamathullah & Maseera Kowsar invite you to be part of a beautiful new beginning. 🤍 💌 Open the invitation and discover the rest…",
     inviteLink: window.location.href

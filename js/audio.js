@@ -33,18 +33,24 @@ class WeddingAudioController {
         return;
       }
 
-      if (!this.customAudio) {
-        this.customAudio = new Audio(musicConfig.customAudioUrl);
-        this.customAudio.loop = true;
-        this.customAudio.volume = 0.6;
-        this.customAudio.preload = 'auto';
-
-        // Continuous loop fallback to guarantee seamless replay across all browsers
-        this.customAudio.addEventListener('ended', () => {
-          this.customAudio.currentTime = 0;
-          this.customAudio.play().catch(() => {});
-        });
+      // Already created (e.g. guest tapped play first): it is loading/playing.
+      // Calling load() again would restart it, so leave it alone.
+      if (this.customAudio) {
+        this.isReady = true;
+        resolve();
+        return;
       }
+
+      this.customAudio = new Audio(musicConfig.customAudioUrl);
+      this.customAudio.loop = true;
+      this.customAudio.volume = 0.6;
+      this.customAudio.preload = 'auto';
+
+      // Continuous loop fallback to guarantee seamless replay across all browsers
+      this.customAudio.addEventListener('ended', () => {
+        this.customAudio.currentTime = 0;
+        this.customAudio.play().catch(() => {});
+      });
 
       // If readyState is HAVE_CURRENT_DATA (2) or higher, audio is buffered and ready
       if (this.customAudio.readyState >= 2) {

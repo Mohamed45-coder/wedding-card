@@ -77,7 +77,9 @@ class WeddingScratchCard {
       this.floralImgLoaded = false;
       // Procedural fallback is already drawn by setupCanvas
     };
-    this.floralImg.src = 'assets/images/scratch_flowers.webp';
+    // Deferred: the scratch card is only reachable after the hero video ends,
+    // so don't compete with the video download during the initial loader.
+    this.scheduleFloralImageLoad();
 
     // Initial canvas setup (draws procedural fallback if image not yet loaded)
     this.setupCanvas();
@@ -105,6 +107,24 @@ class WeddingScratchCard {
     }
 
     this.populateRevealedDetails();
+  }
+
+  scheduleFloralImageLoad() {
+    let requested = false;
+    const load = () => {
+      if (requested) return;
+      requested = true;
+      this.floralImg.src = 'assets/images/scratch_flowers.webp';
+    };
+
+    const video = document.getElementById('heroVideo');
+    if (video) {
+      // Start once the guest taps play (video is buffered enough by then)
+      video.addEventListener('playing', load, { once: true });
+    }
+    // Fallback: shortly after the invitation is shown, even without a tap
+    window.addEventListener('wedding:invitationReady', () => setTimeout(load, 4000), { once: true });
+    if (!video) load();
   }
 
   populateRevealedDetails() {

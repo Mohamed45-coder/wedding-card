@@ -243,6 +243,50 @@ body.video-completed .hero-video-section {
   white-space: nowrap;
 }
 
+/* Buffering indicator: shown only if the guest taps before the video can play */
+.video-buffering {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 16;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.3rem;
+  background: rgba(26, 5, 7, 0.85);
+  border: 1px solid rgba(221, 174, 59, 0.6);
+  border-radius: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  color: var(--color-gold-light);
+  font-family: var(--font-serif-display);
+  font-size: clamp(0.75rem, 2.6vw, 0.9rem);
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.video-container.is-buffering .video-buffering {
+  opacity: 1;
+  visibility: visible;
+}
+
+.video-buffering-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(221, 174, 59, 0.3);
+  border-top-color: var(--color-gold-light);
+  border-radius: 50%;
+  animation: video-buffering-spin 0.8s linear infinite;
+}
+
+@keyframes video-buffering-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Scroll Prompt Indicator (Appears when video finishes) */
 .video-scroll-prompt {
   position: absolute;
@@ -1546,65 +1590,6 @@ body.scratch-locked .locked-until-scratch {
   font-style: italic;
   line-height: 1.5;
   margin-bottom: 1rem;
-}
-
-/* Wishes Form Card Enhancements */
-.wishes-form-card {
-  max-width: 640px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.wishes-form-header {
-  text-align: center;
-  margin-bottom: 1.4rem;
-}
-
-.wishes-form-title {
-  font-family: var(--font-serif-display);
-  font-size: 1.2rem;
-  letter-spacing: 0.5px;
-  color: var(--color-maroon);
-  margin-bottom: 0.3rem;
-}
-
-.wishes-form-subtitle {
-  font-family: var(--font-serif-text);
-  font-style: italic;
-  font-size: 0.92rem;
-  color: var(--color-text-secondary);
-}
-
-.form-group {
-  margin-bottom: 1.25rem;
-}
-
-.form-label {
-  display: block;
-  font-family: var(--font-serif-display);
-  font-size: 0.85rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--color-maroon);
-  margin-bottom: 0.4rem;
-}
-
-.form-input, .form-textarea, .form-select {
-  width: 100%;
-  padding: 0.8rem 1.1rem;
-  background: var(--bg-card-solid);
-  border: 1.5px solid var(--border-gold);
-  border-radius: var(--radius-md);
-  color: var(--color-text-primary);
-  font-family: var(--font-serif-text);
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.form-input:focus, .form-textarea:focus, .form-select:focus {
-  border-color: var(--color-gold-rich);
-  box-shadow: 0 0 12px rgba(201, 154, 44, 0.35);
 }
 
 /* Responsive Mobile Layout */

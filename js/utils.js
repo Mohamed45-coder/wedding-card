@@ -136,6 +136,12 @@ class WeddingShareManager {
   openWhatsAppModal() {
     const modal = document.getElementById('whatsappModal');
     if (modal) {
+      // Load the invitation preview image only when the modal is first opened
+      const img = modal.querySelector('img[data-src]');
+      if (img) {
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+      }
       modal.classList.add('active');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';

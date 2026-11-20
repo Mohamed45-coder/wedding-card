@@ -17,8 +17,9 @@
   <meta name="theme-color" content="#5C101D">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="assets/images/fevicon.webp">
-  <link rel="apple-touch-icon" href="assets/images/fevicon.webp">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+  <link rel="icon" type="image/webp" sizes="192x192" href="assets/images/fevicon.webp">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
   <link rel="preload" as="image" href="assets/images/hero_poster.webp" type="image/webp">
 
   <!-- Google Fonts: Luxury Wedding Typography -->
@@ -205,6 +206,12 @@
         <source src="assets/video/hero_section_video.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
+
+      <!-- Buffering Indicator (only if tapped before the video can play) -->
+      <div class="video-buffering" role="status" aria-live="polite">
+        <span class="video-buffering-spinner" aria-hidden="true"></span>
+        <span>Loading…</span>
+      </div>
 
       <!-- Scroll Indicator (Fades in once video completes) -->
       <a href="#scratchSection" id="videoScrollPrompt" class="video-scroll-prompt" aria-label="Scroll down to invitation details">
@@ -555,33 +562,10 @@
             <span class="ornament">❖</span>
             <span class="line"></span>
           </div>
-          <p class="section-description">Send your warm congratulations and heartfelt blessings to Rahamathullah & Maseera.</p>
+          <p class="section-description">Heartfelt blessings from our loved ones for Rahamathullah & Maseera.</p>
         </div>
 
         <div class="wishes-layout">
-          <!-- Wishes Submission Form -->
-          <div class="royal-card wishes-form-card reveal">
-            <div class="ornate-corner-tl"></div>
-            <div class="ornate-corner-tr"></div>
-            <div class="ornate-corner-bl"></div>
-            <div class="ornate-corner-br"></div>
-
-            <form id="wishesForm">
-              <div class="form-group">
-                <label for="wishName" class="form-label">Your Name</label>
-                <input type="text" id="wishName" class="form-input" placeholder="e.g. Tariq & Family" required>
-              </div>
-              <div class="form-group">
-                <label for="wishMessage" class="form-label">Your Blessings / Message</label>
-                <textarea id="wishMessage" class="form-textarea" rows="3" placeholder="Write your heartfelt congratulations and Duas..." required></textarea>
-              </div>
-              <button type="submit" class="btn-royal" style="width:100%;">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                Send Blessings
-              </button>
-            </form>
-          </div>
-
           <!-- 3D Luxury Invitation Card Carousel -->
           <div id="wishesList" class="wishes-carousel-wrapper reveal reveal-delay-1"></div>
         </div>
@@ -699,7 +683,7 @@
       <div class="modal-content whatsapp-modal-content">
         <!-- Attached Invitation Preview Image -->
         <div class="whatsapp-invite-image-wrapper">
-          <img src="assets/images/whatsapp_invite.webp" alt="Wedding Invitation of Mohamed Rahamathullah & Maseera Kowsar" class="whatsapp-invite-img" loading="lazy">
+          <img data-src="assets/images/whatsapp_invite.webp" alt="Wedding Invitation of Mohamed Rahamathullah & Maseera Kowsar" class="whatsapp-invite-img">
         </div>
 
         <!-- Invitation Message Details -->
@@ -731,8 +715,6 @@
   </div>
 
   <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js"></script>
   <script src="js/config.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/hero-video.js"></script>

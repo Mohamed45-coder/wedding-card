@@ -46,13 +46,8 @@ Designed with a **Royal Gold, Ivory, and Deep Maroon** color palette and Islamic
 8. **Family Blessings**:
    - Symmetrical royal framed cards for the Groom's Family and Bride's Family.
 
-9. **Wishes Guestbook**:
-   - Interactive guestbook form with `localStorage` persistence.
-   - Preloaded with warm blessings + real-time user submissions with avatar badges.
-
-10. **RSVP System**:
-    - Name, Phone, Guest count, and Attendance status.
-    - One-click WhatsApp RSVP submission to the family's WhatsApp number.
+9. **Wishes & Prayers**:
+   - 3D carousel of blessings defined in `initialWishes` inside `config.js` (static, no backend).
 
 11. **Share & QR Code**:
     - Instant WhatsApp share button with pre-formatted invite text.
@@ -89,8 +84,7 @@ wedding-site/
     ├── celebration.js      # Fullscreen canvas fireworks and gold confetti particle engine
     ├── petals.js           # Floating rose petals & gold dust particle canvas
     ├── timeline.js         # Dynamic timeline generator
-    ├── guestbook.js        # Wishes form & localStorage persistence
-    ├── rsvp.js             # RSVP form validation & WhatsApp submission
+    ├── guestbook.js        # Static wishes carousel (from config.js)
     ├── utils.js            # Calendar .ics export, clipboard, scroll observer
     └── app.js              # Main application initializer
 ```

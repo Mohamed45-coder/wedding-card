@@ -1,18 +1,16 @@
 /**
  * ==========================================================================
  * ROYAL WEDDING INVITATION - 3D LUXURY BLESSING CAROUSEL & GUESTBOOK
- * Supabase integration, 3D stacked deck presentation, touch gestures & autoplay
+ * Static wishes from config.js, 3D stacked deck presentation, touch gestures & autoplay
  * ==========================================================================
  */
 
 class WeddingGuestbook {
   constructor() {
-    this.form = document.getElementById('wishesForm');
     this.listContainer = document.getElementById('wishesList');
     this.wishes = [];
     this.deckItems = [];
     this.activeIndex = 0;
-    this.isSubmitting = false;
 
     // Autoplay & Interaction state
     this.autoplayInterval = null;
@@ -31,15 +29,22 @@ class WeddingGuestbook {
     this.dotElements = [];
   }
 
-  async init() {
+  init() {
     if (!this.listContainer) return;
 
-    if (this.form) {
-      this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+    // Only autoplay while the carousel is actually on screen
+    this.isInView = !('IntersectionObserver' in window);
+    if (!this.isInView) {
+      new IntersectionObserver((entries) => {
+        this.isInView = entries[0].isIntersecting;
+        if (this.isInView) this.startAutoplay();
+        else this.stopAutoplay();
+      }).observe(this.listContainer);
     }
 
-    // Fetch wishes on initial load
-    await this.fetchWishes();
+    // Static wishes from config.js
+    this.wishes = (window.WEDDING_CONFIG && window.WEDDING_CONFIG.initialWishes) || [];
+    this.render();
 
     // Pause autoplay when document is not visible
     document.addEventListener('visibilitychange', () => {
@@ -54,124 +59,6 @@ class WeddingGuestbook {
     window.addEventListener('resize', () => {
       this.cardWidth = window.innerWidth <= 640 ? Math.min(320, window.innerWidth - 44) : 340;
     });
-  }
-
-  getSupabaseClient() {
-    return window.supabaseClient || (typeof supabaseClient !== 'undefined' ? supabaseClient : null);
-  }
-
-  async fetchWishes() {
-    const client = this.getSupabaseClient();
-
-    if (!client) {
-      console.warn('Supabase client is not initialized. Using initial config wishes.');
-      const initialWishes = window.WEDDING_CONFIG ? (window.WEDDING_CONFIG.initialWishes || []) : [];
-      this.wishes = initialWishes;
-      this.render();
-      return;
-    }
-
-    try {
-      const { data, error } = await client
-        .from('wedding_wishes')
-        .select('id, name, message, order, created_at, is_deleted')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching wedding wishes from Supabase:', error);
-        const fallback = window.WEDDING_CONFIG ? (window.WEDDING_CONFIG.initialWishes || []) : [];
-        this.wishes = fallback;
-        this.render();
-        return;
-      }
-
-      const allWishes = Array.isArray(data) ? data : [];
-      this.wishes = allWishes.filter((w) => w.is_deleted !== 1);
-      this.render();
-    } catch (err) {
-      console.error('Unexpected error while fetching wishes:', err);
-      const fallback = window.WEDDING_CONFIG ? (window.WEDDING_CONFIG.initialWishes || []) : [];
-      this.wishes = fallback;
-      this.render();
-    }
-  }
-
-  async handleSubmit(e) {
-    e.preventDefault();
-    if (this.isSubmitting) return;
-
-    const nameInput = document.getElementById('wishName');
-    const messageInput = document.getElementById('wishMessage');
-
-    const name = nameInput ? nameInput.value.trim() : '';
-    const message = messageInput ? messageInput.value.trim() : '';
-
-    if (!name || !message) {
-      if (window.showToast) window.showToast('Please enter your name and heartfelt wish! ✨');
-      return;
-    }
-
-    const client = this.getSupabaseClient();
-
-    if (!client) {
-      console.error('Supabase client is not initialized. Cannot submit wish.');
-      if (window.showToast) {
-        window.showToast('Unable to submit wish. Supabase credentials are not configured yet.');
-      }
-      return;
-    }
-
-    const maxOrder = this.wishes.reduce((max, w) => {
-      const orderVal = typeof w.order === 'number' ? w.order : parseInt(w.order, 10);
-      return !isNaN(orderVal) ? Math.max(max, orderVal) : max;
-    }, 0);
-    const nextOrder = maxOrder + 1;
-
-    this.isSubmitting = true;
-    const submitBtn = this.form ? this.form.querySelector('button[type="submit"]') : null;
-    if (submitBtn) {
-      submitBtn.disabled = true;
-    }
-
-    try {
-      const { error } = await client
-        .from('wedding_wishes')
-        .insert([
-          {
-            name: name,
-            message: message,
-            order: nextOrder
-          }
-        ]);
-
-      if (error) {
-        console.error('Error inserting wish into Supabase:', error);
-        if (window.showToast) {
-          window.showToast('Failed to send wish. Please try again later.');
-        }
-        return;
-      }
-
-      if (this.form) this.form.reset();
-
-      if (window.showToast) {
-        window.showToast('💖 Thank you! Your warm blessing has been recorded.');
-      }
-
-      // Refresh wishes and place newly added wish into active focus
-      this.activeIndex = 0;
-      await this.fetchWishes();
-    } catch (err) {
-      console.error('Unexpected error while inserting wish:', err);
-      if (window.showToast) {
-        window.showToast('An unexpected error occurred. Please try again.');
-      }
-    } finally {
-      this.isSubmitting = false;
-      if (submitBtn) {
-        submitBtn.disabled = false;
-      }
-    }
   }
 
   formatWishDate(wish) {
@@ -742,7 +629,7 @@ class WeddingGuestbook {
 
   startAutoplay() {
     this.stopAutoplay();
-    if (this.deckItems.length <= 1) return;
+    if (this.deckItems.length <= 1 || !this.isInView || document.hidden) return;
 
     // Active card visible ~2.2s, transition ~0.85s -> 3000ms loop
     this.autoplayInterval = setInterval(() => {
@@ -778,19 +665,7 @@ class WeddingGuestbook {
       <div class="blessing-empty-icon" aria-hidden="true">✨</div>
       <h3 class="blessing-empty-title">Be The First To Bestow A Blessing</h3>
       <p class="blessing-empty-desc">Send your warmest Duas and heartfelt congratulations to Mohamed Rahamathullah & Maseera Kowsar.</p>
-      <button type="button" class="btn-royal" id="emptyStateWriteBtn" style="padding: 0.7rem 1.8rem; font-size: 0.85rem;">
-        Pen Your Blessing
-      </button>
     `;
-
-    const writeBtn = emptyCard.querySelector('#emptyStateWriteBtn');
-    if (writeBtn && this.form) {
-      writeBtn.addEventListener('click', () => {
-        this.form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        const nameInput = document.getElementById('wishName');
-        if (nameInput) nameInput.focus();
-      });
-    }
 
     this.listContainer.appendChild(emptyCard);
   }
